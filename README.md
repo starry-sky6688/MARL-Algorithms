@@ -3,4 +3,6 @@ This is an implementation of the multi-agent algrithms, qmix and vdn, both of wh
 ## Result
 Although qmix and vdn are the state of art multi-agent algrithms, they are unstable sometimes, you need to independently run several times to get better performence.
 
-![performence of qmix in two independent runs](https://github.com/starry-sky6688/StarCraft/blob/master/model/qmix/compare.png)  ![performence of vdn in two independent runs](https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/compare.png)
+![performence of qmix in two independent runs](https://github.com/starry-sky6688/StarCraft/blob/master/model/qmix/compare.png)
+
+![performence of vdn in two independent runs](https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/compare.png)
