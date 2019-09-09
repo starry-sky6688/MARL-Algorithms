@@ -104,7 +104,7 @@ class Runner:
         for epoch in range(self.args.evaluate_epoch):
             _, episode_reward = self.evaluateWorker.generate_episode(0)
             result = 'win' if episode_reward > 0 else 'defeat'
-            print('Epoch {} test reslut is {}'.format(epoch, result))
+            print('Epoch {}: test reslut is {}'.format(epoch, result))
             if episode_reward > 0:
                 win_number += 1
         return win_number / self.args.evaluate_epoch
