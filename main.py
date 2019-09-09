@@ -18,10 +18,18 @@ if __name__ == '__main__':
     args.obs_shape = env_info["obs_shape"]
     args.episode_limit = env_info["episode_limit"]
     runner = Runner(env, args)
-    runner.run()
+    if args.learn:
+        runner.run()
+    else:
+        win_rate = runner.evaluate_sparse()
+        print('The win rate of qmix is ', win_rate)
     args.alg = 'vdn'
-    args.result_dir = './model/vdn/7-18'
+    args.model_dir = './model/vdn'
+    args.result_dir = './model/vdn'
     runner = Runner(env, args)
-    runner.run()
-
+    if args.learn:
+        runner.run()
+    else:
+        win_rate = runner.evaluate_sparse()
+        print('The win rate of vdn is ', win_rate)
     env.close()

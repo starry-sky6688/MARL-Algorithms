@@ -24,10 +24,10 @@ class VDN:
 
         # 如果存在模型则加载模型
         if args.model_dir != '':
-            path_rnn = args.model_dir + 'rnn_net_params.pkl'
-            path_vdn = args.model_dir + 'vdn_net_params.pkl'
-            self.eval_rnn.load_state_dict(torch.load(args.model_dir + 'rnn_net_params.pkl'))
-            self.eval_vdn_net.load_state_dict(torch.load(args.model_dir + 'vdn_net_params.pkl'))
+            path_rnn = args.model_dir + '/rnn_net_params.pkl'
+            path_vdn = args.model_dir + '/vdn_net_params.pkl'
+            self.eval_rnn.load_state_dict(torch.load(args.model_dir + '/rnn_net_params.pkl'))
+            self.eval_vdn_net.load_state_dict(torch.load(args.model_dir + '/vdn_net_params.pkl'))
             print('Successfully load the rnn model {} and the vdn model {}'.format(path_rnn, path_vdn))
 
         # 让target_net和eval_net的网络参数相同

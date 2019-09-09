@@ -31,7 +31,7 @@ class Agents:
         # 转化成Tensor,inputs的维度是(42,)，要转化成(1,42)
         inputs = torch.tensor(inputs, dtype=torch.float32).unsqueeze(0)
         avail_actions = torch.tensor(avail_actions, dtype=torch.float32).unsqueeze(0)
-        q_value, self.policy.eval_hidden[:, agent_id, :] = self.policy.eval_rnn.forward(inputs, hidden_state)
+        q_value, self.policy.eval_hidden[:, agent_num, :] = self.policy.eval_rnn.forward(inputs, hidden_state)
         q_value[avail_actions == 0.0] = - float("inf")  # 传入的avail_actions参数是一个array
         if np.random.uniform() < epsilon:
             action = np.random.choice(avail_actions_ind)  # action是一个整数
