@@ -5,7 +5,7 @@ This is an implementation of the multi-agent algrithms, [QMIX](https://arxiv.org
 Although qmix and vdn are the state of art multi-agent algrithms, they are unstable sometimes, you need to independently run several times to get better performence.
 
 ### 1. Win Rate of QMIX in Two Independent Runs
-<div align=center><img width = '600' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/qmix/compare.png"/></div>
+<div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/qmix/compare.png"/></div>
 
 ### 2. Win Rate of VDN in Two Independent Runs
-<div align=center><img width = '600' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/compare.png"/></div>
+<div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/compare.png"/></div>
