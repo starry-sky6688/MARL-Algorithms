@@ -3,8 +3,9 @@ This is an implementation of the multi-agent algrithms, [QMIX](https://arxiv.org
 
 ## Quick Start
 '''shell
-python main.py --evaluate_epoch=100
+$ python main.py --evaluate_epoch=100
 '''
+
 Directly run the main.py, then the two algrithms will be tested for 100 episodes seperately, using the pretrained model.
 
 ## Result
