@@ -1,6 +1,9 @@
 # StarCraft
 This is an implementation of the multi-agent algrithms, [QMIX](https://arxiv.org/abs/1803.11485) and [VDN](https://arxiv.org/abs/1706.05296), both of which are the state of art multi-agent algrithms.We trained these algrithms on [SMAC](https://github.com/oxwhirl/smac), which is the decentralised micromanagement scenarios of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty)
 
+## Quick Start
+Directly run the main.py, then the pretrained model will be loaded and you can see the test result of 100 episodes.
+
 ## Result
 Although qmix and vdn are the state of art multi-agent algrithms, they are unstable sometimes, you need to independently run several times to get better performence.
 
