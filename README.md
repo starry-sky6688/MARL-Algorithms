@@ -16,16 +16,16 @@ This is a pytorch implementation of the multi-agent algrithms, [QMIX](https://ar
 ## Quick Start
 
 ```shell
-$ python main.py --evaluate_epoch=100
+$ python main.py --evaluate_epoch=100 --map=3m
 ```
 
-Directly run the main.py, then the two algrithms will be tested for 100 episodes seperately, using the pretrained model.
+Directly run the main.py, then the two algrithms will be respectively tested on map '3m' for 100 episodes, using the pretrained model.
 
 ## Result
 Although qmix and vdn are the state of art multi-agent algrithms, they are unstable sometimes, you need to independently run several times to get better performence.
 
-### 1. Win Rate of QMIX in Two Independent Runs
+### 1. Win Rate of QMIX in Two Independent Runs on '3m'
 <div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/qmix/compare.png"/></div>
 
-### 2. Win Rate of VDN in Two Independent Runs
+### 2. Win Rate of VDN in Two Independent Runs on '3m'
 <div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/compare.png"/></div>
