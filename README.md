@@ -4,8 +4,8 @@ This is a pytorch implementation of the multi-agent algrithms, [QMIX](https://ar
 
 ## Corresponding Papers
 
--[QMIX:Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1803.11485)
--[VDN:Value-Decomposition Networks For Cooperative Multi-Agent Learning](https://arxiv.org/abs/1706.05296)
+- [QMIX:Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1803.11485)
+- [VDN:Value-Decomposition Networks For Cooperative Multi-Agent Learning](https://arxiv.org/abs/1706.05296)
 
 ## Requirements
 
