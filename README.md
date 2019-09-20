@@ -1,5 +1,5 @@
 # StarCraft
-This is a pytorch implementation of the multi-agent algrithms, [QMIX](https://arxiv.org/abs/1803.11485) and [VDN](https://arxiv.org/abs/1706.05296), both of which are the state of art multi-agent algrithms.We trained these algrithms on [SMAC](https://github.com/oxwhirl/smac), which is the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
+This is a pytorch implementation of the multi-agent reinforcement learning algrithms, [QMIX](https://arxiv.org/abs/1803.11485) and [VDN](https://arxiv.org/abs/1706.05296), both of which are the state of art MARL algrithms.We trained these algrithms on [SMAC](https://github.com/oxwhirl/smac), which is the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
 
 ## Requirements
 
