@@ -13,7 +13,7 @@ class RolloutWorker:
         self.args = args
 
     def generate_episode(self, epsilon):
-        o, u, r, o_next, s, s_next, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], [], [], []
+        o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
         self.env.reset()
         terminated = False
         step = 0
@@ -64,6 +64,8 @@ class RolloutWorker:
             avail_action = self.env.get_avail_agent_actions(agent_id)
             avail_actions.append(avail_action)
         avail_u.append(avail_actions)
+        avail_u_next = avail_u[1:]
+        avail_u = avail_u[:-1]
 
         # 返回的episode必须长度都是self.episode_limit，所以不够的话进行填充
         for i in range(step, self.episode_limit):  # 没有的字段用0填充，并且padded为1
@@ -75,14 +77,13 @@ class RolloutWorker:
             s_next.append(np.zeros(self.state_shape))
             u_onehot.append(np.zeros((self.n_agents, self.n_actions)))
             avail_u.append(np.zeros((self.n_agents, self.n_actions)))
+            avail_u_next.append(np.zeros((self.n_agents, self.n_actions)))
             padded.append([1.])
             terminate.append([1.])
 
         '''
-        (o[n], u[n], r[n], o_next[n], avail_u[n], u_onehot[n])组成第n条经验，其中avail_u[n]维度为
-        (episode数，transition数+1，n_agents, n_actions)其他的维度都为(episode数，transition数+1，n_agents, 自己的具体维度)
+        (o[n], u[n], r[n], o_next[n], avail_u[n], u_onehot[n])组成第n条经验，各项维度都为(episode数，transition数，n_agents, 自己的具体维度)
          因为avail_u表示当前经验的obs可执行的动作，但是计算target_q的时候，需要obs_net及其可执行动作，
-         而最后一个obs_next没有下一条经验，需要单独给它一个avail_u
         '''
         episode = dict(o=o.copy(),
                        s=s.copy(),
@@ -91,6 +92,7 @@ class RolloutWorker:
                        avail_u=avail_u.copy(),
                        o_next=o_next.copy(),
                        s_next=s_next.copy(),
+                       avail_u_next=avail_u_next.copy(),
                        u_onehot=u_onehot.copy(),
                        padded=padded.copy(),
                        terminated=terminate.copy()

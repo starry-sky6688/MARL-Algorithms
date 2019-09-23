@@ -14,7 +14,6 @@ class ReplayBuffer:
         # memory management
         self.current_idx = 0
         self.current_size = 0
-        self.n_transitions_stored = 0
         # create the buffer to store info
         # buffer各个维度的意义：1——第几个episode 2——episode中第几个transition 3——第几个agent的数据 4——具体obs维度
         self.buffers = {'o': np.empty([self.size, self.episode_limit, self.n_agents, self.obs_shape]),
@@ -23,9 +22,8 @@ class ReplayBuffer:
                         'r': np.empty([self.size, self.episode_limit, 1]),
                         'o_next': np.empty([self.size, self.episode_limit, self.n_agents, self.obs_shape]),
                         's_next': np.empty([self.size, self.episode_limit, self.state_shape]),
-                        # 因为avail_u表示当前经验的obs可执行的动作，但是计算target_q的时候，需要obs_net及其可执行动作，
-                        # 而最后一个obs_next没有下一条经验，需要单独给它一个avail_u
-                        'avail_u': np.empty([self.size, self.episode_limit + 1, self.n_agents, self.n_actions]),
+                        'avail_u': np.empty([self.size, self.episode_limit, self.n_agents, self.n_actions]),
+                        'avail_u_next': np.empty([self.size, self.episode_limit, self.n_agents, self.n_actions]),
                         'u_onehot': np.empty([self.size, self.episode_limit, self.n_agents, self.n_actions]),
                         'padded': np.empty([self.size, self.episode_limit, 1]),
                         'terminated': np.empty([self.size, self.episode_limit, 1])
@@ -51,10 +49,10 @@ class ReplayBuffer:
             self.buffers['o_next'][idxs] = episode_batch['o_next']
             self.buffers['s_next'][idxs] = episode_batch['s_next']
             self.buffers['avail_u'][idxs] = episode_batch['avail_u']
+            self.buffers['avail_u_next'][idxs] = episode_batch['avail_u_next']
             self.buffers['u_onehot'][idxs] = episode_batch['u_onehot']
             self.buffers['padded'][idxs] = episode_batch['padded']
             self.buffers['terminated'][idxs] = episode_batch['terminated']
-            self.n_transitions_stored += self.episode_limit * batch_size
 
     def sample(self, batch_size):
         temp_buffer = {}

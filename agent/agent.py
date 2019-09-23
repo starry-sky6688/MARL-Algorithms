@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from policy.vdn import VDN
 from policy.qmix import QMIX
+from torch.distributions import Categorical
 
 
 class Agents:
@@ -16,9 +17,9 @@ class Agents:
             self.policy = QMIX(args)
         self.args = args
 
-    def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon):
+    def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon, evaluate=False):
         inputs = obs.copy()
-        avail_actions_ind = np.nonzero(avail_actions)[0]
+        avail_actions_ind = np.nonzero(avail_actions)[0]  # 可执行动作对应的index
         # 传入的agent_num是一个整数，代表第几个agent，现在要把他变成一个onehot向量
         agent_id = np.zeros(self.n_agents)
         agent_id[agent_num] = 1.
@@ -32,12 +33,33 @@ class Agents:
         inputs = torch.tensor(inputs, dtype=torch.float32).unsqueeze(0)
         avail_actions = torch.tensor(avail_actions, dtype=torch.float32).unsqueeze(0)
         q_value, self.policy.eval_hidden[:, agent_num, :] = self.policy.eval_rnn.forward(inputs, hidden_state)
-        q_value[avail_actions == 0.0] = - float("inf")  # 传入的avail_actions参数是一个array
-        if np.random.uniform() < epsilon:
-            action = np.random.choice(avail_actions_ind)  # action是一个整数
+        if self.args.alg == 'coma':
+            action = self._choose_coma_action(q_value, avail_actions, epsilon)
         else:
-            action = torch.argmax(q_value)
+            q_value[avail_actions == 0.0] = - float("inf")  # 传入的avail_actions参数是一个array
+            if np.random.uniform() < epsilon:
+                action = np.random.choice(avail_actions_ind)  # action是一个整数
+            else:
+                action = torch.argmax(q_value)
         return action
+
+    def _choose_coma_action(self, inputs, avail_actions, epsilon, evaluate=False):  # inputs是所有动作的q值
+        # 先将Actor网络的输出通过softmax转换成概率分布
+        prob = torch.nn.functional.softmax(inputs, dim=-1)
+        prob[avail_actions == 0] = 0.0  # 不能执行的动作概率为0
+        prob = prob / prob.sum(dim=-1, keepdim=True)  # 因为上面把不能执行的动作概率置为0，所以概率和不为1了，这里要重新正则化一下
+        # TODO 这里dim=1可能有问题
+        action_num = avail_actions.sum(dim=1, keepdim=True).float()  # 可以选择的动作的个数
+
+        if epsilon == 0 and evaluate:
+            # 测试时直接选最大的
+            action = torch.argmax(prob)
+        else:
+            # 在训练的时候给概率分布添加噪音
+            prob = ((1 - epsilon) * prob + torch.ones_like(prob) * epsilon/action_num)
+            action = Categorical(prob).sample().long()
+        return action
+
 
     def _get_max_episode_len(self, batch):
         terminated = batch['terminated']
@@ -55,33 +77,10 @@ class Agents:
         # 每次学习时，各个episode的长度不一样，因此取其中最长的episode作为所有episode的长度
         max_episode_len = self._get_max_episode_len(batch)
         for key in batch.keys():
-            if key != 'avail_u':
-                batch[key] = batch[key][:, :max_episode_len]
-            else:
-                batch[key] = batch[key][:, :max_episode_len + 1]  # avail_u要比其他的多一个
+            batch[key] = batch[key][:, :max_episode_len]
         self.policy.learn(batch, max_episode_len, train_step)
         if train_step > 0 and train_step % self.args.save_cycle == 0:
             self.policy.save_model(train_step)
-
-    def check_consistency(self, batch):
-        terminated = batch['terminated']
-        episode_num = terminated.shape[0]
-        episode_len = 0
-        for episode_idx in range(episode_num):
-            for transition_idx in range(self.args.episode_limit):
-                if terminated[episode_idx, transition_idx, 0] == 1:
-                    episode_len = transition_idx + 1
-            for transition_idx in range(1, episode_len):
-                a = batch['o'][episode_idx, transition_idx]
-                b = batch['o_next'][episode_idx, transition_idx - 1]
-                if not ((a == b).all()):
-                    print('o is', batch['o'][episode_idx, transition_idx])
-                    print('o_next is', batch['o_next'][episode_idx, transition_idx])
-            a = batch['o'][episode_idx, 1:episode_len]
-            b = batch['o_next'][episode_idx, :episode_len - 1]
-            # print(a == b)
-            if not (a == b).all():
-                print(episode_idx)
 
 
 

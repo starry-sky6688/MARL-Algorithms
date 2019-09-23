@@ -1,4 +1,5 @@
 import torch
+import os
 from network.rnn import RNN
 from network.vdn_net import VDNNet
 
@@ -22,12 +23,13 @@ class VDN:
         self.eval_vdn_net = VDNNet()  # 把agentsQ值加起来的网络
         self.target_vdn_net = VDNNet()
 
+        self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        if args.model_dir != '':
-            path_rnn = args.model_dir + '/rnn_net_params.pkl'
-            path_vdn = args.model_dir + '/vdn_net_params.pkl'
-            self.eval_rnn.load_state_dict(torch.load(args.model_dir + '/rnn_net_params.pkl'))
-            self.eval_vdn_net.load_state_dict(torch.load(args.model_dir + '/vdn_net_params.pkl'))
+        if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
+            path_rnn = self.model_dir + '/rnn_net_params.pkl'
+            path_vdn = self.model_dir + '/vdn_net_params.pkl'
+            self.eval_rnn.load_state_dict(torch.load(path_rnn))
+            self.eval_vdn_net.load_state_dict(torch.load(path_vdn))
             print('Successfully load the rnn model {} and the vdn model {}'.format(path_rnn, path_vdn))
 
         # 让target_net和eval_net的网络参数相同
@@ -58,8 +60,8 @@ class VDN:
                 batch[key] = torch.tensor(batch[key], dtype=torch.long)
             else:
                 batch[key] = torch.tensor(batch[key], dtype=torch.float32)
-        u, r, avail_u, terminated = batch['u'], batch['r'],  batch['avail_u'], batch['terminated']
-        avail_u_next = avail_u[:, 1:]  # 下一个obs可以执行的动作，要用来计算target_q
+        u, r, avail_u, avail_u_next, terminated = batch['u'], batch['r'],  batch['avail_u'], \
+                                                  batch['avail_u_next'], batch['terminated']
         mask = 1 - batch["padded"].float()  # 用来把那些填充的经验的TD-error置0，从而不让它们影响到学习
         # 得到每个agent对应的Q值，维度为(episode个数, max_episode_len， n_agents，n_actions)
         q_evals, q_targets = self.get_q_values(batch, max_episode_len)
@@ -147,5 +149,7 @@ class VDN:
 
     def save_model(self, train_step):
         num = str(train_step // self.args.save_cycle)
-        torch.save(self.eval_vdn_net.state_dict(), self.args.result_dir + '/' + num + '_vdn_net_params.pkl')
-        torch.save(self.eval_rnn.state_dict(),  self.args.result_dir + '/' + num + '_rnn_net_params.pkl')
+        if not os.path.exists(self.model_dir):
+            os.makedirs(self.model_dir)
+        torch.save(self.eval_vdn_net.state_dict(), self.model_dir + '/' + num + '_vdn_net_params.pkl')
+        torch.save(self.eval_rnn.state_dict(),  self.model_dir + '/' + num + '_rnn_net_params.pkl')

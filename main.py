@@ -9,7 +9,6 @@ if __name__ == '__main__':
                         step_mul=args.step_mul,
                         difficulty=args.difficulty,
                         game_version=args.game_version,
-                        seed=args.seed,
                         replay_dir=args.replay_dir)
     env_info = env.get_env_info()
     args.n_actions = env_info["n_actions"]
@@ -24,8 +23,8 @@ if __name__ == '__main__':
         win_rate = runner.evaluate_sparse()
         print('The win rate of qmix is ', win_rate)
     args.alg = 'vdn'
-    args.model_dir = './model/vdn'
-    args.result_dir = './model/vdn'
+    args.model_dir = './model'
+    args.result_dir = './model'
     runner = Runner(env, args)
     if args.learn:
         runner.run()

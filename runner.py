@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from common.rollout import RolloutWorker
 from agent.agent import Agents
 from common.replay_buffer import ReplayBuffer
@@ -15,6 +16,8 @@ class Runner:
         self.buffer = ReplayBuffer(args)
         self.args = args
         self.epsilon = args.epsilon
+        self.anneal_epsilon = args.anneal_epsilon
+        self.min_epsilon = args.min_epsilon
 
         # 用来在一个稀疏奖赏的环境上评估算法的好坏，胜利为1，失败为-1，其他普通的一步为0
         self.env_evaluate = StarCraft2Env(map_name=args.map,
@@ -26,6 +29,10 @@ class Runner:
                                           reward_sparse=True,
                                           reward_scale=False)
         self.evaluateWorker = RolloutWorker(self.env_evaluate, self.agents, args)
+        # 用来保存plt和pkl
+        self.save_path = self.args.result_dir + '/' + args.alg + '/' + args.map
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
 
     def run(self):
         plt.figure()
@@ -35,7 +42,7 @@ class Runner:
         train_steps = 0
         for epoch in tqdm(range(self.args.n_epoch)):
             # print('Train epoch {} start'.format(epoch))
-            self.epsilon = self.epsilon - 0.0001125 if self.epsilon > 0.05 else self.epsilon
+            self.epsilon = self.epsilon - self.anneal_epsilon if self.epsilon > self.min_epsilon else self.epsilon
             episodes = []
             # 收集self.args.n_episodes个episodes
             for episode_idx in range(self.args.n_episodes):
@@ -48,7 +55,7 @@ class Runner:
                 for key in episode_batch.keys():
                     episode_batch[key] = np.concatenate((episode_batch[key], episode[key]), axis=0)
             self.buffer.store_episode(episode_batch)
-            if self.buffer.current_size > 100:
+            if self.buffer.current_size > self.args.batch_size:
                 for train_step in range(self.args.train_steps):
                     mini_batch = self.buffer.sample(self.args.batch_size)
                     self.agents.train(mini_batch, train_steps)
@@ -70,9 +77,9 @@ class Runner:
                     plt.xlabel('epoch')
                     plt.ylabel('episode_rewards')
 
-                    plt.savefig(self.args.result_dir + '/plt.png', format='png')
-                    np.save(self.args.result_dir + '/win_rates', win_rates)
-                    np.save(self.args.result_dir + '/episode_rewards', episode_rewards)
+                    plt.savefig(self.save_path + '/plt.png', format='png')
+                    np.save(self.save_path + '/win_rates', win_rates)
+                    np.save(self.save_path + '/episode_rewards', episode_rewards)
 
         plt.cla()
         plt.subplot(2, 1, 1)
@@ -85,9 +92,9 @@ class Runner:
         plt.xlabel('epoch')
         plt.ylabel('episode_rewards')
 
-        plt.savefig(self.args.result_dir + '/plt.png', format='png')
-        np.save(self.args.result_dir + '/win_rates', win_rates)
-        np.save(self.args.result_dir + '/episode_rewards', episode_rewards)
+        plt.savefig(self.save_path + '/plt.png', format='png')
+        np.save(self.save_path + '/win_rates', win_rates)
+        np.save(self.save_path + '/episode_rewards', episode_rewards)
 
     def evaluate(self):
         win_number = 0
