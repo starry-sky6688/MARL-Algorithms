@@ -218,7 +218,6 @@ class COMA:
         # 把该列表转化成(episode个数, max_episode_len， n_agents，n_actions)的数组
         action_prob = torch.stack(action_prob, dim=1)
 
-        # 训练时要得到所有动作加上epsilon-greedy的概率，否则样本是epsilon-greedy的样本，更新用的本身策略，就不是on-policy了
         action_num = avail_actions.sum(dim=-1, keepdim=True).float().repeat(1, 1, 1, avail_actions.shape[-1])   # 可以选择的动作的个数
         action_prob = ((1 - epsilon) * action_prob + torch.ones_like(action_prob) * epsilon / action_num)
         action_prob[avail_actions == 0] = 0.0  # 不能执行的动作概率为0
@@ -249,26 +248,6 @@ class COMA:
         q_evals = torch.gather(q_evals, dim=3, index=u).squeeze(3)
         q_next_target = torch.gather(q_next_target, dim=3, index=u_next).squeeze(3)
         targets = td_lambda_target(batch, max_episode_len, q_next_target, self.args)
-
-        # for transition_idx in range(max_episode_len):
-        #
-        #     td_error = targets[:, transition_idx].detach() - q_evals[:, transition_idx]
-        #     masked_td_error = mask[:, transition_idx] * td_error  # 抹掉填充的经验的td_error
-        #
-        #     # 不能直接用mean，因为还有许多经验是没用的，所以要求和再比真实的经验数，才是真正的均值
-        #     loss = (masked_td_error ** 2).sum() / mask[:, transition_idx].sum()
-        #     # print('Loss is ', loss)
-        #     self.critic_optimizer.zero_grad()
-        #     if transition_idx != max_episode_len - 1:
-        #         loss.backward(retain_graph=True)
-        #     else:
-        #         loss.backward()
-        #     # print(loss)
-        #     grad_norm = torch.nn.utils.clip_grad_norm_(self.critic_parameters, self.args.grad_norm_clip)
-        #     self.critic_optimizer.step()
-        #     self.critic_train_step += 1
-        #     if self.critic_train_step > 0 and self.critic_train_step % self.args.target_update_cycle == 0:
-        #         self.target_critic.load_state_dict(self.eval_critic.state_dict())
 
         td_error = targets.detach() - q_evals
         masked_td_error = mask * td_error  # 抹掉填充的经验的td_error
