@@ -2,28 +2,86 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="04e2173f-fc4e-4c18-a6a6-2eee0be7f606" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/model/qmix/8m/plt.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/qmix/8m/plt_0.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/model/vdn/8m/plt_0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/analyse.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/agent/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/agent/agent.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/arguments.py" beforeDir="false" afterPath="$PROJECT_DIR$/common/arguments.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/replay_buffer.py" beforeDir="false" afterPath="$PROJECT_DIR$/common/replay_buffer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/rollout.py" beforeDir="false" afterPath="$PROJECT_DIR$/common/rollout.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/common/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/qmix/compare.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/qmix/plt.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/qmix/plt_0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/qmix/qmix_net_params.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/qmix/rnn_net_params.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/vdn/compare.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/vdn/plt.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/vdn/plt_0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/vdn/rnn_net_params.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/vdn/vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/2s3z/episode_rewards.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/2s3z/plt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/2s3z/win_rates.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/1_qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/1_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/2_qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/2_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/3_qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/3_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/4_qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/4_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/5_qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/5_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/6_qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/6_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/78qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/78rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/7_qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/7_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/83qmix_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/83rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/episode_rewards.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/episode_rewards_0.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/episode_rewards_2.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/plt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/plt_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/plt_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/plt_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/win_rates.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/win_rates_0.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/qmix/8m/win_rates_2.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/2s3z/episode_rewards.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/2s3z/plt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/2s3z/win_rates.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/10_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/10_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/11_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/11_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/12_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/12_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/13_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/13_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/14_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/14_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/15_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/15_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/2_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/2_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/3_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/3_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/4_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/4_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/5_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/5_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/6_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/6_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/7_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/7_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/86rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/86vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/8_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/8_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/9_rnn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/9_vdn_net_params.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/episode_rewards_0.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/plt_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/plt_1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/vdn/8m/win_rates_0.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/plt.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/policy/qmix.py" beforeDir="false" afterPath="$PROJECT_DIR$/policy/qmix.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/policy/vdn.py" beforeDir="false" afterPath="$PROJECT_DIR$/policy/vdn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/runner.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/关键参数设置.xlsx" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,31 +92,44 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/runner.py">
+        <entry file="file://$PROJECT_DIR$/analyse.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
+            <state relative-caret-position="459">
+              <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#365#833#0" />
+                <element signature="e#828#2902#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/model/coma/3m/plt.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/arguments.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="918">
-              <caret line="34" column="41" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="41" />
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/model/qmix/3m/plt.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/qmix/3m/plt_0.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/qmix/3m/compare.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="305">
-              <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
+            <state relative-caret-position="783">
+              <caret line="29" column="69" selection-start-line="29" selection-start-column="69" selection-end-line="29" selection-end-column="69" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -67,38 +138,15 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/vdn/8m/plt_0.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/vdn/8m/plt_1.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/model/qmix/8m/plt.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/vdn/2s3z/plt.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/qmix/8m/plt_1.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/qmix/8m/plt_2.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/qmix/2s3z/plt.png">
-          <provider selected="true" editor-type-id="images" />
+        <entry file="file://$PROJECT_DIR$/runner.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2484">
+              <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -125,10 +173,15 @@
       <find>limit</find>
       <find>evaluate</find>
       <find>正则</find>
-      <find>eval_hidden</find>
-      <find>init_hidden</find>
       <find>n_transitions_stored</find>
       <find>avail_u_next</find>
+      <find>_get_episode_len</find>
+      <find>eval_hidden</find>
+      <find>init_hidden</find>
+      <find>328767123287667</find>
+      <find>loss</find>
+      <find>nan</find>
+      <find>target_critic</find>
     </findStrings>
     <replaceStrings>
       <replace>episode_limit</replace>
@@ -160,19 +213,21 @@
         <option value="$PROJECT_DIR$/network/qmix_net.py" />
         <option value="$PROJECT_DIR$/network/coma_actor.py" />
         <option value="$PROJECT_DIR$/network/rnn.py" />
-        <option value="$PROJECT_DIR$/network/coma_critic.py" />
-        <option value="$PROJECT_DIR$/common/utils.py" />
         <option value="$PROJECT_DIR$/common/action_selector.py" />
         <option value="$PROJECT_DIR$/aaa.py" />
-        <option value="$PROJECT_DIR$/policy/coma.py" />
-        <option value="$PROJECT_DIR$/plt.py" />
-        <option value="$PROJECT_DIR$/runner.py" />
-        <option value="$PROJECT_DIR$/policy/qmix.py" />
-        <option value="$PROJECT_DIR$/policy/vdn.py" />
         <option value="$PROJECT_DIR$/common/replay_buffer.py" />
+        <option value="$PROJECT_DIR$/policy/vdn.py" />
+        <option value="$PROJECT_DIR$/common/utils.py" />
         <option value="$PROJECT_DIR$/agent/agent.py" />
+        <option value="$PROJECT_DIR$/common/coma_arguments.py" />
+        <option value="$PROJECT_DIR$/policy/coma.py" />
+        <option value="$PROJECT_DIR$/policy/qmix.py" />
+        <option value="$PROJECT_DIR$/network/coma_critic.py" />
         <option value="$PROJECT_DIR$/common/rollout.py" />
         <option value="$PROJECT_DIR$/common/arguments.py" />
+        <option value="$PROJECT_DIR$/plt.py" />
+        <option value="$PROJECT_DIR$/runner.py" />
+        <option value="$PROJECT_DIR$/analyse.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -216,6 +271,19 @@
               <item name="StarCraft" type="b2602c69:ProjectViewProjectNode" />
               <item name="StarCraft" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="coma" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="StarCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="StarCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="coma" type="462c0819:PsiDirectoryNode" />
+              <item name="3m" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="StarCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="StarCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
               <item name="qmix" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -223,7 +291,13 @@
               <item name="StarCraft" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
               <item name="qmix" type="462c0819:PsiDirectoryNode" />
-              <item name="8m" type="462c0819:PsiDirectoryNode" />
+              <item name="3m" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="StarCraft" type="b2602c69:ProjectViewProjectNode" />
+              <item name="StarCraft" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="vdn" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="StarCraft" type="b2602c69:ProjectViewProjectNode" />
@@ -243,11 +317,15 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../MADDPG/MAHER-pytorch-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/network" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/policy/vdn.py" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\项目\星际争霸\StarCraft\network" />
+      <recent name="E:\项目\星际争霸\StarCraft\policy" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\项目\星际争霸\StarCraft\model\qmix\2s3z" />
       <recent name="E:\项目\星际争霸\StarCraft\model" />
@@ -268,7 +346,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.analyse">
     <configuration name="aaa" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="StarCraft" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -282,6 +360,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/aaa.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="analyse" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="StarCraft" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/analyse.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -323,7 +422,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/plt.py" />
+      <option name="SCRIPT_NAME" value="E:\项目\星际争霸\StarCraft\analyse.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -353,34 +452,13 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="tutorial" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="StarCraft" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tutorial.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.main" />
+        <item itemvalue="Python.analyse" />
         <item itemvalue="Python.plt" />
-        <item itemvalue="Python.aaa" />
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.runner" />
-        <item itemvalue="Python.tutorial" />
+        <item itemvalue="Python.aaa" />
       </list>
     </recent_temporary>
   </component>
@@ -430,19 +508,20 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1670179" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1670179" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" weight="0.3449024" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49947312" weight="0.23427331" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.20281996" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49947312" weight="0.43492407" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286334" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.3286334" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="8" sideWeight="0.5273973" visible="true" weight="0.31127983" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.5273973" weight="0.4099783" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50052685" side_tool="true" weight="0.27874187" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.55426764" weight="0.39804772" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -472,102 +551,12 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/pysc2/lib/protocol.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="123" column="6" selection-start-line="123" selection-start-column="6" selection-end-line="123" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/pysc2/lib/remote_controller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="363">
-          <caret line="251" column="37" lean-forward="true" selection-start-line="251" selection-start-column="37" selection-end-line="251" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/images/plot1.png" />
-    <entry file="file://$PROJECT_DIR$/model/vdn/3_vdn_net_params.pkl" />
-    <entry file="file://$PROJECT_DIR$/network/coma_actor.py" />
-    <entry file="file://$PROJECT_DIR$/network/vdn_net.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/torch/serialization.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9234">
-          <caret line="355" selection-start-line="355" selection-end-line="355" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/torch/nn/functional.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="1021" selection-start-line="1021" selection-end-line="1021" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/torch/nn/modules/linear.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/torch/nn/modules/module.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12663">
-          <caret line="476" selection-start-line="476" selection-end-line="476" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/network/coma_critic.py" />
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/torch/distributions/categorical.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2295">
-          <caret line="89" selection-start-line="89" selection-end-line="89" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="41" column="32" lean-forward="true" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/torch/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/model/qmix/qmix.png" />
     <entry file="file://$PROJECT_DIR$/model/vdn/7-18/plt.png" />
     <entry file="file://$PROJECT_DIR$/model/qmix/7-18/plt.png" />
-    <entry file="file://$PROJECT_DIR$/network/rnn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/smac/env/starcraft2/starcraft2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="372" column="66" selection-start-line="372" selection-start-column="59" selection-end-line="372" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/smac/examples/rllib/env.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="317">
@@ -576,17 +565,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/aaa.py" />
-    <entry file="file://$PROJECT_DIR$/network/qmix_net.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="38" column="22" selection-start-line="38" selection-start-column="19" selection-end-line="38" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/policy/coma.py" />
     <entry file="file://$PROJECT_DIR$/common/action_selector.py" />
     <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/smac/env/starcraft2/maps/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -594,21 +572,6 @@
           <caret line="9" selection-start-line="9" selection-end-line="9" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/qmix/3m/compare.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/vdn/3m/plt_0.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/vdn/3m/plt.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/qmix/3m/plt_0.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/qmix/3m/plt.png">
-      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/pysc2/env/remote_sc2_env.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -632,60 +595,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/vdn/8m/plt.png" />
-    <entry file="file://$PROJECT_DIR$/plt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/policy/qmix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="151" column="39" lean-forward="true" selection-start-line="151" selection-start-column="39" selection-end-line="151" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/policy/vdn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="61" column="17" selection-start-line="62" selection-start-column="23" selection-end-line="62" selection-end-column="35" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/replay_buffer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="64" column="27" selection-start-line="64" selection-start-column="27" selection-end-line="64" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/rollout.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2484">
-          <caret line="92" column="44" selection-start-line="92" selection-start-column="44" selection-end-line="92" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/agent/agent.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="9" column="23" selection-start-line="9" selection-start-column="23" selection-end-line="9" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/qmix/8m/plt_0.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -701,40 +610,230 @@
     <entry file="file://$PROJECT_DIR$/model/vdn/2s3z/plt.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/vdn/8m/plt_0.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/model/vdn/8m/plt_1.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/runner.py">
+    <entry file="file://$PROJECT_DIR$/policy/vdn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
+        <state relative-caret-position="367">
+          <caret line="85" column="34" selection-start-line="85" selection-start-column="34" selection-end-line="85" selection-end-column="34" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/qmix_net.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/smac/env/starcraft2/starcraft2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="380" selection-start-line="380" selection-end-line="380" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Learning/Python/Anaconda/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="310" selection-start-line="310" selection-end-line="310" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1134">
+          <caret line="67" column="8" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/rnn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/coma/3m/loss_plt.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://C:/Learning/Python/Anaconda/Lib/site-packages/tqdm/_tqdm.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="71">
+          <caret line="1132" selection-start-line="1132" selection-end-line="1132" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/qmix/8m/plt.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Learning/Python/Anaconda/Lib/argparse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1058">
+          <caret line="1302" column="8" selection-start-line="1302" selection-start-column="8" selection-end-line="1302" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/coma_arguments.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="712">
+          <caret line="34" column="60" selection-start-line="34" selection-start-column="60" selection-end-line="34" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/replay_buffer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-131">
+          <caret line="64" column="27" selection-start-line="64" selection-start-column="27" selection-end-line="64" selection-end-column="27" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/arguments.py">
+    <entry file="file://$PROJECT_DIR$/model/coma/3m/plt_1.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/policy/qmix.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="918">
-          <caret line="34" column="41" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="41" />
+        <state relative-caret-position="193">
+          <caret line="83" column="49" selection-start-line="83" selection-start-column="49" selection-end-line="83" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/qmix/8m/plt.png">
+    <entry file="file://$PROJECT_DIR$/model/coma/3m/78rnn_params.pkl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/network/coma_critic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="18" column="30" selection-start-line="18" selection-start-column="30" selection-end-line="18" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/policy/coma.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-415">
+          <caret line="79" column="17" selection-start-line="79" selection-start-column="17" selection-end-line="79" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#2353#2645#0" />
+            <element signature="e#5060#7982#0" />
+            <element signature="e#8044#9033#0" />
+            <element signature="e#9099#10263#0" />
+            <element signature="e#10337#11899#0" />
+            <element signature="e#11949#12094#0" />
+            <element signature="e#12120#14749#0" />
+            <element signature="e#15107#15436#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/agent/agent.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="2" selection-start-line="2" selection-end-line="4" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/arguments.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="22" column="62" selection-start-line="22" selection-start-column="62" selection-end-line="22" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/rollout.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="81">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/vdn/3m/compare.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/vdn/3m/plt.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/vdn/3m/plt_0.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/coma/3m/plt_0.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analyse.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="82" lean-forward="true" selection-start-line="82" selection-end-line="82" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#365#833#0" />
+            <element signature="e#828#2902#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runner.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2484">
+          <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="783">
+          <caret line="29" column="69" selection-start-line="29" selection-start-column="69" selection-end-line="29" selection-end-column="69" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/qmix/3m/plt.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/qmix/3m/plt_0.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/qmix/3m/compare.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/coma/3m/plt.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
   </component>

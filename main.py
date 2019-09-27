@@ -1,10 +1,16 @@
 from runner import Runner
 from smac.env import StarCraft2Env
-from common.arguments import get_args
+from common.arguments import get_common_args
+from common.arguments import get_coma_args
+from common.arguments import get_mixer_args
 
 
 if __name__ == '__main__':
-    args = get_args()
+    args = get_common_args()
+    if args.alg == 'coma':
+        args = get_coma_args(args)
+    else:
+        args = get_mixer_args(args)
     env = StarCraft2Env(map_name=args.map,
                         step_mul=args.step_mul,
                         difficulty=args.difficulty,
@@ -21,14 +27,5 @@ if __name__ == '__main__':
         runner.run()
     else:
         win_rate = runner.evaluate_sparse()
-        print('The win rate of qmix is ', win_rate)
-    args.alg = 'vdn'
-    args.model_dir = './model'
-    args.result_dir = './model'
-    runner = Runner(env, args)
-    if args.learn:
-        runner.run()
-    else:
-        win_rate = runner.evaluate_sparse()
-        print('The win rate of vdn is ', win_rate)
+        print('The win rate of {} is  {}'.format(args.alg, win_rate))
     env.close()

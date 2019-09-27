@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 
 class RolloutWorker:
@@ -12,7 +13,7 @@ class RolloutWorker:
         self.obs_shape = args.obs_shape
         self.args = args
 
-    def generate_episode(self, epsilon):
+    def generate_episode(self, epsilon, evaluate=False):
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
         self.env.reset()
         terminated = False
@@ -21,12 +22,13 @@ class RolloutWorker:
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
         self.agents.policy.init_hidden(1)  # 初始化hidden_state
         while not terminated:
+            # time.sleep(0.2)
             obs = self.env.get_obs()
             state = self.env.get_state()
             actions, avail_actions, actions_onehot = [], [], []
             for agent_id in range(self.n_agents):
                 avail_action = self.env.get_avail_agent_actions(agent_id)
-                action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id, avail_action, epsilon)
+                action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id, avail_action, epsilon, evaluate)
                 # 生成对应动作的0 1向量
                 action_onehot = np.zeros(self.args.n_actions)
                 action_onehot[action] = 1
@@ -36,7 +38,7 @@ class RolloutWorker:
                 last_action[agent_id] = action_onehot
 
             reward, terminated, _ = self.env.step(actions)
-            if step == self.episode_limit:
+            if step == self.episode_limit - 1:
                 terminated = True
 
             o.append(obs)
@@ -51,6 +53,8 @@ class RolloutWorker:
             padded.append([0.])
             episode_reward += reward
             step += 1
+            # if terminated:
+            #     time.sleep(1)
         # 处理最后一个obs
         o.append(obs)
         s.append(state)

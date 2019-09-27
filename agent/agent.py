@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from policy.vdn import VDN
 from policy.qmix import QMIX
+from policy.coma import COMA
 from torch.distributions import Categorical
 
 
@@ -13,8 +14,10 @@ class Agents:
         self.obs_shape = args.obs_shape
         if args.alg == 'vdn':
             self.policy = VDN(args)
-        else:
+        elif args.alg == 'qmix':
             self.policy = QMIX(args)
+        else:
+            self.policy = COMA(args)
         self.args = args
 
     def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon, evaluate=False):
@@ -34,7 +37,7 @@ class Agents:
         avail_actions = torch.tensor(avail_actions, dtype=torch.float32).unsqueeze(0)
         q_value, self.policy.eval_hidden[:, agent_num, :] = self.policy.eval_rnn.forward(inputs, hidden_state)
         if self.args.alg == 'coma':
-            action = self._choose_coma_action(q_value, avail_actions, epsilon)
+            action = self._choose_coma_action(q_value, avail_actions, epsilon, evaluate)
         else:
             q_value[avail_actions == 0.0] = - float("inf")  # 传入的avail_actions参数是一个array
             if np.random.uniform() < epsilon:
@@ -44,22 +47,24 @@ class Agents:
         return action
 
     def _choose_coma_action(self, inputs, avail_actions, epsilon, evaluate=False):  # inputs是所有动作的q值
+        action_num = avail_actions.sum(dim=1, keepdim=True).float().repeat(1, avail_actions.shape[-1])  # 可以选择的动作的个数
         # 先将Actor网络的输出通过softmax转换成概率分布
         prob = torch.nn.functional.softmax(inputs, dim=-1)
+        # 在训练的时候给概率分布添加噪音
+        prob = ((1 - epsilon) * prob + torch.ones_like(prob) * epsilon / action_num)
         prob[avail_actions == 0] = 0.0  # 不能执行的动作概率为0
-        prob = prob / prob.sum(dim=-1, keepdim=True)  # 因为上面把不能执行的动作概率置为0，所以概率和不为1了，这里要重新正则化一下
-        # TODO 这里dim=1可能有问题
-        action_num = avail_actions.sum(dim=1, keepdim=True).float()  # 可以选择的动作的个数
+
+        """
+        不能执行的动作概率为0之后，prob中的概率和不为1，这里不需要进行正则化，因为torch.distributions.Categorical
+        会将其进行正则化。要注意在训练的过程中没有用到Categorical，所以训练时取执行的动作对应的概率需要再正则化。
+        """
 
         if epsilon == 0 and evaluate:
             # 测试时直接选最大的
             action = torch.argmax(prob)
         else:
-            # 在训练的时候给概率分布添加噪音
-            prob = ((1 - epsilon) * prob + torch.ones_like(prob) * epsilon/action_num)
             action = Categorical(prob).sample().long()
         return action
-
 
     def _get_max_episode_len(self, batch):
         terminated = batch['terminated']
@@ -73,12 +78,12 @@ class Agents:
                     break
         return max_episode_len
 
-    def train(self, batch, train_step):
+    def train(self, batch, train_step, epsilon=None):  # coma在训练时也需要epsilon计算动作的执行概率
         # 每次学习时，各个episode的长度不一样，因此取其中最长的episode作为所有episode的长度
         max_episode_len = self._get_max_episode_len(batch)
         for key in batch.keys():
             batch[key] = batch[key][:, :max_episode_len]
-        self.policy.learn(batch, max_episode_len, train_step)
+        self.policy.learn(batch, max_episode_len, train_step, epsilon)
         if train_step > 0 and train_step % self.args.save_cycle == 0:
             self.policy.save_model(train_step)
 

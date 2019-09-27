@@ -13,12 +13,12 @@ class Runner:
         self.env = env
         self.agents = Agents(args)
         self.rolloutWorker = RolloutWorker(env, self.agents, args)
-        self.buffer = ReplayBuffer(args)
+        if args.alg != 'coma':
+            self.buffer = ReplayBuffer(args)
         self.args = args
         self.epsilon = args.epsilon
         self.anneal_epsilon = args.anneal_epsilon
         self.min_epsilon = args.min_epsilon
-
         # 用来在一个稀疏奖赏的环境上评估算法的好坏，胜利为1，失败为-1，其他普通的一步为0
         self.env_evaluate = StarCraft2Env(map_name=args.map,
                                           step_mul=args.step_mul,
@@ -48,43 +48,47 @@ class Runner:
             for episode_idx in range(self.args.n_episodes):
                 episode, _ = self.rolloutWorker.generate_episode(self.epsilon)
                 episodes.append(episode)
+                print(_)
             # episode的每一项都是一个(1, episode_len, n_agents, 具体维度)四维数组，下面要把所有episode的的obs拼在一起
             episode_batch = episodes[0]
             episodes.pop(0)
             for episode in episodes:
                 for key in episode_batch.keys():
                     episode_batch[key] = np.concatenate((episode_batch[key], episode[key]), axis=0)
-            self.buffer.store_episode(episode_batch)
-            if self.buffer.current_size > self.args.batch_size:
+            if self.args.alg == 'coma':
+                self.agents.train(episode_batch, train_steps, self.epsilon)
+                train_steps += 1
+            else:
+                self.buffer.store_episode(episode_batch)
                 for train_step in range(self.args.train_steps):
-                    mini_batch = self.buffer.sample(self.args.batch_size)
+                    mini_batch = self.buffer.sample(min(self.buffer.current_size, self.args.batch_size))
                     self.agents.train(mini_batch, train_steps)
                     train_steps += 1
-                win_rate, episode_reward = self.evaluate()
-                # print('win_rate is ', win_rate)
-                win_rates.append(win_rate)
-                episode_rewards.append(episode_reward)
-                # 可视化
-                if epoch % 100 == 0:
-                    plt.cla()
-                    plt.subplot(2, 1, 1)
-                    plt.plot(range(len(win_rates)), win_rates)
-                    plt.xlabel('epoch')
-                    plt.ylabel('win_rate')
+            win_rate, episode_reward = self.evaluate()
+            # print('win_rate is ', win_rate)
+            win_rates.append(win_rate)
+            episode_rewards.append(episode_reward)
+            # 可视化
+            if epoch % 100 == 0:
+                plt.cla()
+                plt.subplot(2, 1, 1)
+                plt.plot(range(len(win_rates)), win_rates)
+                plt.xlabel('epoch * 10')
+                plt.ylabel('win_rate')
 
-                    plt.subplot(2, 1, 2)
-                    plt.plot(range(len(episode_rewards)), episode_rewards)
-                    plt.xlabel('epoch')
-                    plt.ylabel('episode_rewards')
+                plt.subplot(2, 1, 2)
+                plt.plot(range(len(episode_rewards)), episode_rewards)
+                plt.xlabel('epoch * 10')
+                plt.ylabel('episode_rewards')
 
-                    plt.savefig(self.save_path + '/plt.png', format='png')
-                    np.save(self.save_path + '/win_rates', win_rates)
-                    np.save(self.save_path + '/episode_rewards', episode_rewards)
+                plt.savefig(self.save_path + '/plt.png', format='png')
+                np.save(self.save_path + '/win_rates', win_rates)
+                np.save(self.save_path + '/episode_rewards', episode_rewards)
 
         plt.cla()
         plt.subplot(2, 1, 1)
         plt.plot(range(len(win_rates)), win_rates)
-        plt.xlabel('epoch')
+        plt.xlabel('epoch * 10')
         plt.ylabel('win_rate')
 
         plt.subplot(2, 1, 2)
@@ -100,7 +104,7 @@ class Runner:
         win_number = 0
         episode_rewards = 0
         for epoch in range(self.args.evaluate_epoch):
-            _, episode_reward = self.rolloutWorker.generate_episode(0)
+            _, episode_reward = self.rolloutWorker.generate_episode(0, evaluate=True)
             episode_rewards += episode_reward
             if episode_reward > self.args.threshold:
                 win_number += 1
@@ -109,11 +113,12 @@ class Runner:
     def evaluate_sparse(self):
         win_number = 0
         for epoch in range(self.args.evaluate_epoch):
-            _, episode_reward = self.evaluateWorker.generate_episode(0)
+            _, episode_reward = self.evaluateWorker.generate_episode(0, evaluate=True)
             result = 'win' if episode_reward > 0 else 'defeat'
-            print('Epoch {}: {}'.format(epoch, result))
+            # print('Epoch {}: {}'.format(epoch, result))
             if episode_reward > 0:
                 win_number += 1
+        self.env_evaluate.close()
         return win_number / self.args.evaluate_epoch
 
 

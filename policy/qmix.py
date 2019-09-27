@@ -80,16 +80,12 @@ class QMIX:
 
         targets = r + self.args.gamma * q_total_target * (1 - terminated)
 
-        td_error = (q_total_eval - targets.detach())  # TODO 还差一个括号，有没有影响
+        td_error = (q_total_eval - targets.detach())
         masked_td_error = mask * td_error  # 抹掉填充的经验的td_error
 
         # loss = masked_td_error.pow(2).mean()
         # 不能直接用mean，因为还有许多经验是没用的，所以要求和再比真实的经验数，才是真正的均值
         loss = (masked_td_error ** 2).sum() / mask.sum()
-        # a = self.eval_qmix_net.named_parameters()
-        # for i in a:
-        #     print(i)
-        # print('train_step is {}'.format(train_step))
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
