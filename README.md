@@ -3,9 +3,9 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 
 ## Corresponding Papers
 
-- [QMIX: Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1803.11485)
-- [VDN: Value-Decomposition Networks For Cooperative Multi-Agent Learning](https://arxiv.org/abs/1706.05296)
-- [COMA: Counterfactual Multi-Agent Policy Gradients](https://arxiv.org/abs/1705.08926)
+- QMIX: [QMIX: Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1803.11485)
+- VDN: [Value-Decomposition Networks For Cooperative Multi-Agent Learning](https://arxiv.org/abs/1706.05296)
+- COMA: [Counterfactual Multi-Agent Policy Gradients](https://arxiv.org/abs/1705.08926)
 
 ## Requirements
 
@@ -37,4 +37,4 @@ Although QMIX, VDN and COMA are the state of art multi-agent algorithms, they ar
 <div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/3m/compare.png"/></div>
 
 ### 3. Win Rate of COMA in a Run on '3m'
-<div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/coma/3m/plt.png"/></div>
+<div align=center><img width = '500' height ='200' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/coma/3m/plt.png"/></div>
