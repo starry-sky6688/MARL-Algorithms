@@ -36,5 +36,5 @@ Although QMIX, VDN and COMA are the state of art multi-agent algorithms, they ar
 ### 2. Win Rate of VDN in Two Independent Runs on '3m'
 <div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/3m/compare.png"/></div>
 
-### 3. Win Rate of COMA in a Run on '3m'
-<div align=center><img width = '500' height ='200' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/coma/3m/plt.png"/></div>
+### 3. Win Rate of COMA in One Run on '8m'
+<div align=center><img width = '500' height ='200' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/coma/8m/plt.png"/></div>
