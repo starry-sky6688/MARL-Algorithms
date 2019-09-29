@@ -31,8 +31,7 @@ def plt_win_rate():
     plt.show()
 
 
-def find_best_model(model_path):
-    model_num = 174
+def find_best_model(model_path, model_num):
     args = get_common_args()
     if args.alg == 'coma':
         args = get_coma_args(args)
@@ -83,5 +82,5 @@ def find_best_model(model_path):
 
 
 if __name__ == '__main__':
-    model_path = './model/coma/3m/'
-    find_best_model(model_path)
+    model_path = './model/coma/8m/'
+    find_best_model(model_path, 90)

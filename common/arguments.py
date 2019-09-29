@@ -11,7 +11,7 @@ def get_common_args():
     # the environment setting
     parser.add_argument('--difficulty', type=str, default='3', help='the difficulty of the game')
     parser.add_argument('--game_version', type=str, default='latest', help='the version of the game')
-    parser.add_argument('--map', type=str, default='3m', help='the map of the game')
+    parser.add_argument('--map', type=str, default='8m', help='the map of the game')
     parser.add_argument('--seed', type=int, default=123, help='random seed')
     parser.add_argument('--step_mul', type=int, default=8, help='how many steps to make an action')
     parser.add_argument('--replay_dir', type=str, default='', help='the directory of save the replay')
