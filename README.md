@@ -42,4 +42,4 @@ Although QMIX, VDN, COMA and QTRAN are the state of art multi-agent algorithms, 
 
 
 ### 4. Win Rate of QTRAN-base in One Run on '3m'
-<div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/qtran_base/3m/plt.png"/></div>
+<div align=center><img width = '500' height ='200' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/qtran_base/3m/plt.png"/></div>
