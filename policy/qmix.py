@@ -25,12 +25,12 @@ class QMIX:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
-            path_rnn = self.model_dir + '/rnn_net_params.pkl'
-            path_qmix = self.model_dir + '/qmix_net_params.pkl'
-            self.eval_rnn.load_state_dict(torch.load(path_rnn))
-            self.eval_qmix_net.load_state_dict(torch.load(path_qmix))
-            print('Successfully load the rnn model {} and the qmix model {}'.format(path_rnn, path_qmix))
+        # if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
+        #     path_rnn = self.model_dir + '/rnn_net_params.pkl'
+        #     path_qmix = self.model_dir + '/qmix_net_params.pkl'
+        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
+        #     self.eval_qmix_net.load_state_dict(torch.load(path_qmix))
+        #     print('Successfully load the rnn model {} and the qmix model {}'.format(path_rnn, path_qmix))
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())

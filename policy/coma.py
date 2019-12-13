@@ -134,6 +134,7 @@ class COMA:
         # 添加所有agent的上一个动作
         inputs.append(u_onehot_last)
         inputs_next.append(u_onehot)
+
         # 添加当前动作
         '''
         因为coma对于当前动作，输入的是其他agent的当前动作，不输入当前agent的动作，为了方便起见，每次虽然输入当前agent的

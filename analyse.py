@@ -12,22 +12,40 @@ from common.arguments import get_mixer_args
 
 
 def plt_win_rate():
-    r_coma = np.load('./model/coma/3m/win_rates.npy')
-    r_1 = []
+    reward = np.load('./model/qtran_base/3m/episode_rewards.npy')
+    rate = np.load('./model/qtran_base/3m/win_rates.npy')
+    r_reward, r_rate = [], []
     a = 0
     num = 1
-    for i in range(8150):
-        a += r_coma[i]
+    for i in range(3150):
+        a += reward[i]
         if i > 0 and i % num == 0:
-            r_1.append(a / num)
+            r_reward.append(a / num)
+            a = 0
+    a = 0
+    for i in range(3150):
+        a += rate[i]
+        if i > 0 and i % num == 0:
+            r_rate.append(a / num)
             a = 0
     plt.figure()
-    plt.ylim(0, 1.0)
-    plt.plot(range(len(r_1)), r_1)
-    # plt.legend()
+    # plt.ylim(0, 1.0)
+    # plt.plot(range(len(r_1)), r_1)
+    # # plt.legend()
+    # plt.xlabel('epoch')
+    # plt.ylabel('win_rate')
+
+    plt.subplot(2, 1, 1)
+    plt.plot(range(len(r_rate)), r_rate)
     plt.xlabel('epoch')
     plt.ylabel('win_rate')
-    plt.savefig('./model/coma/3m/plt.png', format='png')
+
+    plt.subplot(2, 1, 2)
+    plt.plot(range(len(r_reward)), r_reward)
+    plt.xlabel('epoch')
+    plt.ylabel('episode_rewards')
+
+    plt.savefig('./model/qtran_base/3m/plt.png', format='png')
     plt.show()
 
 
@@ -43,11 +61,13 @@ def find_best_model(model_path, model_num):
         rnn_suffix = 'rnn_net_params.pkl'
         critic_fuffix = 'qmix_net_params.pkl'
         policy = QMIX
-    else:
+    elif args.alg == 'vdn':
         args = get_mixer_args(args)
         rnn_suffix = 'rnn_net_params.pkl'
         critic_fuffix = 'vdn_net_params.pkl'
         policy = VDN
+    else:
+        raise Exception("Not finished")
     env = StarCraft2Env(map_name=args.map,
                         step_mul=args.step_mul,
                         difficulty=args.difficulty,
@@ -82,5 +102,4 @@ def find_best_model(model_path, model_num):
 
 
 if __name__ == '__main__':
-    model_path = './model/coma/8m/'
-    find_best_model(model_path, 90)
+    plt_win_rate()

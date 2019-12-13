@@ -3,6 +3,8 @@ import torch
 from policy.vdn import VDN
 from policy.qmix import QMIX
 from policy.coma import COMA
+from policy.qtran_alt import QtranAlt
+from policy.qtran_base import QtranBase
 from torch.distributions import Categorical
 
 
@@ -16,8 +18,14 @@ class Agents:
             self.policy = VDN(args)
         elif args.alg == 'qmix':
             self.policy = QMIX(args)
-        else:
+        elif args.alg == 'coma':
             self.policy = COMA(args)
+        elif args.alg == 'qtran_alt':
+            self.policy = QtranAlt(args)
+        elif args.alg == 'qtran_base':
+            self.policy = QtranBase(args)
+        else:
+            raise Exception("No such algorithm")
         self.args = args
 
     def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon, evaluate=False):

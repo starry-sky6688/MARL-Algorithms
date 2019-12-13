@@ -13,7 +13,11 @@ class RolloutWorker:
         self.obs_shape = args.obs_shape
         self.args = args
 
-    def generate_episode(self, epsilon, evaluate=False):
+        self.epsilon = args.epsilon
+        self.anneal_epsilon = args.anneal_epsilon
+        self.min_epsilon = args.min_epsilon
+
+    def generate_episode(self, evaluate=False):
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
         self.env.reset()
         terminated = False
@@ -21,6 +25,7 @@ class RolloutWorker:
         episode_reward = 0
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
         self.agents.policy.init_hidden(1)  # 初始化hidden_state
+        epsilon = 0 if evaluate else self.epsilon
         while not terminated:
             # time.sleep(0.2)
             obs = self.env.get_obs()
@@ -55,6 +60,8 @@ class RolloutWorker:
             step += 1
             # if terminated:
             #     time.sleep(1)
+            if self.args.epsilon_anneal_scale == 'step':
+                epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         # 处理最后一个obs
         o.append(obs)
         s.append(state)
@@ -103,6 +110,10 @@ class RolloutWorker:
                        )
         for key in episode.keys():
             episode[key] = np.array([episode[key]])
+        if self.args.epsilon_anneal_scale == 'episode':
+            epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+        if not evaluate:
+            self.epsilon = epsilon
         return episode, episode_reward
         # 因为buffer里存的是四维的，这里得到的episode只有三维，即transition、agent、shape三个维度，
         # 还差一个episode维度，所以给它加一维
