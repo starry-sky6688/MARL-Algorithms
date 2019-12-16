@@ -30,7 +30,7 @@ class QMIX:
             path_qmix = self.model_dir + '/qmix_net_params.pkl'
             self.eval_rnn.load_state_dict(torch.load(path_rnn))
             self.eval_qmix_net.load_state_dict(torch.load(path_qmix))
-            print('Successfully load the model:\n{}\n{}'.format(path_rnn, path_qmix))
+            print('Successfully load the model: {} and {}'.format(path_rnn, path_qmix))
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
