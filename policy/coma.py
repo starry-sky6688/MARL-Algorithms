@@ -35,7 +35,7 @@ class COMA:
             path_coma = self.model_dir + '/critic_params.pkl'
             self.eval_rnn.load_state_dict(torch.load(path_rnn))
             self.eval_critic.load_state_dict(torch.load(path_coma))
-            print('Successfully load the rnn model {} and the vdn model {}'.format(path_rnn, path_coma))
+            print('Successfully load the model:\n{}\n{}'.format(path_rnn, path_coma))
 
         # 让target_net和eval_net的网络参数相同
         self.target_critic.load_state_dict(self.eval_critic.state_dict())

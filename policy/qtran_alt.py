@@ -36,7 +36,7 @@ class QtranAlt:
             self.eval_rnn.load_state_dict(torch.load(path_rnn))
             self.eval_joint_q.load_state_dict(torch.load(path_joint_q))
             self.v.load_state_dict(torch.load(path_v))
-            print('Successfully load the rnn model {} and the qmix model {}'.format(path_rnn, path_joint_q, path_v))
+            print('Successfully load the model:\n{}\n{}\n{}'.format(path_rnn, path_joint_q, path_v))
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
@@ -147,7 +147,7 @@ class QtranAlt:
         l_nopt = ((d * mask) ** 2).sum() / mask.sum()
         # ---------------------------------------------L_nopt-----------------------------------------------------------
 
-        print('l_td is {}, l_opt is {}, l_nopt is {}'.format(l_td, l_opt, l_nopt))
+        # print('l_td is {}, l_opt is {}, l_nopt is {}'.format(l_td, l_opt, l_nopt))
         loss = l_td + self.args.lambda_opt * l_opt + self.args.lambda_nopt * l_nopt
         # loss = l_td + self.args.lambda_opt * l_opt
         self.optimizer.zero_grad()

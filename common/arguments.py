@@ -15,7 +15,8 @@ def get_common_args():
     parser.add_argument('--seed', type=int, default=123, help='random seed')
     parser.add_argument('--step_mul', type=int, default=8, help='how many steps to make an action')
     parser.add_argument('--replay_dir', type=str, default='', help='the directory of save the replay')
-    parser.add_argument('--alg', type=str, default='qtran_base', help='the algorithm to train the agent')
+    parser.add_argument('--alg', type=str, default='qtran_alt', help='the algorithm to train the agent')
+    # The alternative algorithms are vdn、coma、qmix、qtran_base and qtran_alt
     parser.add_argument('--last_action', type=bool, default=True, help='whether to use the last action to choose action')
     parser.add_argument('--reuse_network', type=bool, default=True, help='whether to use one network for all agents')
     parser.add_argument('--gamma', type=float, default=0.99, help='the discount factor')

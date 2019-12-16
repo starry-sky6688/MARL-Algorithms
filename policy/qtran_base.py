@@ -39,7 +39,7 @@ class QtranBase:
             self.eval_rnn.load_state_dict(torch.load(path_rnn))
             self.eval_joint_q.load_state_dict(torch.load(path_joint_q))
             self.v.load_state_dict(torch.load(path_v))
-            print('Successfully load the rnn model {} and the qmix model {}'.format(path_rnn, path_joint_q, path_v))
+            print('Successfully load the model:\n {}\n{}\n{}'.format(path_rnn, path_joint_q, path_v))
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())

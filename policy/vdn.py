@@ -30,7 +30,7 @@ class VDN:
             path_vdn = self.model_dir + '/vdn_net_params.pkl'
             self.eval_rnn.load_state_dict(torch.load(path_rnn))
             self.eval_vdn_net.load_state_dict(torch.load(path_vdn))
-            print('Successfully load the rnn model {} and the vdn model {}'.format(path_rnn, path_vdn))
+            print('Successfully load the model:\n{}\n{}'.format(path_rnn, path_vdn))
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
