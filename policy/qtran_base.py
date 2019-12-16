@@ -105,7 +105,9 @@ class QtranBase:
 
         # ---------------------------------------------L_opt------------------------------------------------------------
         # 将局部最优动作的Q值相加
-        q_sum_opt = individual_q_evals.max(dim=-1)[0].sum(dim=-1)  # (episode个数, max_episode_len)
+        # 这里要使用individual_q_clone，它把不能执行的动作Q值改变了，使用individual_q_evals可能会使用不能执行的动作的Q值
+        q_sum_opt = individual_q_clone.max(dim=-1)[0].sum(dim=-1)  # (episode个数, max_episode_len)
+
         # 重新得到joint_q_hat_opt，它和joint_q_evals的区别是前者输入的动作是局部最优动作，后者输入的动作是执行的动作
         # (episode个数, max_episode_len)
         joint_q_hat_opt, _, _ = self.get_qtran(batch, hidden_evals, hidden_targets, opt_onehot_eval, hat=True)

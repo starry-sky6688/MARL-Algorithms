@@ -17,13 +17,14 @@ def plt_win_rate():
     r_reward, r_rate = [], []
     a = 0
     num = 1
-    for i in range(3150):
+    end = 5500
+    for i in range(end):
         a += reward[i]
         if i > 0 and i % num == 0:
             r_reward.append(a / num)
             a = 0
     a = 0
-    for i in range(3150):
+    for i in range(end):
         a += rate[i]
         if i > 0 and i % num == 0:
             r_rate.append(a / num)

@@ -20,7 +20,7 @@ def get_common_args():
     parser.add_argument('--reuse_network', type=bool, default=True, help='whether to use one network for all agents')
     parser.add_argument('--gamma', type=float, default=0.99, help='the discount factor')
     parser.add_argument('--optimizer', type=str, default="RMS", help='the optimizer')
-    parser.add_argument('--evaluate_epoch', type=int, default=100, help='the number of the epoch to evaluate the agent')
+    parser.add_argument('--evaluate_epoch', type=int, default=20, help='the number of the epoch to evaluate the agent')
     parser.add_argument('--model_dir', type=str, default='./model', help='the model directory of the policy')
     parser.add_argument('--result_dir', type=str, default='./model', help='the result directory of the policy')
     parser.add_argument('--learn', type=bool, default=False, help='whether to train the model')
@@ -64,7 +64,7 @@ def get_coma_args(args):
     return args
 
 
-# arguments of vnd、 qmix、 QTRAN
+# arguments of vnd、 qmix、 qtran
 def get_mixer_args(args):
     # network
     args.rnn_hidden_dim = 64
@@ -86,7 +86,7 @@ def get_mixer_args(args):
     args.n_episodes = 8
 
     # the number of the train steps in one epoch
-    args.train_steps = 5
+    args.train_steps = 8  # qtran:8
 
     # experience replay
     args.batch_size = 32
