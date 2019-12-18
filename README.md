@@ -30,3 +30,12 @@ Directly run the main.py, then the algorithm will be tested on map '3m' for 100 
 
 ## Result
 Although QMIX, VDN, COMA and QTRAN are the state of art multi-agent algorithms, they are unstable sometimes. If you want the same results as in the papers, you need to independently run several times(more than 10) and take the median or mean of them.
+
+### 1. Win Rate of QMIX in Two Independent Runs on '3m'
+<div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/qmix/3m/compare.png"/></div>
+
+### 2. Win Rate of VDN in Two Independent Runs on '3m'
+<div align=center><img width = '500' height ='400' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/vdn/3m/compare.png"/></div>
+
+### 3. Win Rate of COMA in One Run on '8m'
+<div align=center><img width = '500' height ='200' src ="https://github.com/starry-sky6688/StarCraft/blob/master/model/coma/8m/plt.png"/></div>
