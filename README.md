@@ -1,5 +1,5 @@
 # StarCraft
-This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), and [QTRAN](https://arxiv.org/abs/1905.05408)(both QTRAN-base and QTRAN-alt), which are the state of art MARL algorithms. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
+This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), and [QTRAN](https://arxiv.org/abs/1905.05408)(both QTRAN-base and QTRAN-alt), which are the state of art MARL algorithms. In addition, we implemented [CommNet](https://arxiv.org/abs/1605.07736) and combined it with coma, which we called CommNet_COMA. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
 
 ## Corresponding Papers
 
@@ -7,6 +7,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 - [Value-Decomposition Networks For Cooperative Multi-Agent Learning](https://arxiv.org/abs/1706.05296)
 - [Counterfactual Multi-Agent Policy Gradients](https://arxiv.org/abs/1705.08926)
 - [QTRAN: Learning to Factorize with Transformation for Cooperative Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1905.05408)
+- [Learning Multiagent Communication with Backpropagation](https://arxiv.org/abs/1605.07736)
 
 ## Requirements
 
