@@ -11,7 +11,7 @@ import numpy as np
 
 
 class RNN(nn.Module):
-    # obs_shape应该是obs_shape+n_actions+n_agents，还要输入上一次的动作和agent编号，这样就可以只使用一个神经网络
+    # obs_shape应该是obs_shape+n_actions+n_agents，还要输入当前agent的上一个动作和agent编号，这样就可以只使用一个神经网络
     def __init__(self, input_shape, args):
         super(RNN, self).__init__()
         self.args = args

@@ -1,14 +1,14 @@
 from runner import Runner
 from smac.env import StarCraft2Env
-from common.arguments import get_common_args
-from common.arguments import get_coma_args
-from common.arguments import get_mixer_args
+from common.arguments import get_common_args, get_coma_args, get_mixer_args, get_commnet_args
 
 
 if __name__ == '__main__':
     args = get_common_args()
     if args.alg == 'coma':
         args = get_coma_args(args)
+    elif args.alg == 'commnet_coma':
+        args = get_commnet_args(args)
     else:
         args = get_mixer_args(args)
     env = StarCraft2Env(map_name=args.map,

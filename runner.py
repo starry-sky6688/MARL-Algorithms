@@ -1,7 +1,7 @@
 import numpy as np
 import os
-from common.rollout import RolloutWorker
-from agent.agent import Agents
+from common.rollout import RolloutWorker, CommNetRolloutWorker
+from agent.agent import Agents, CommNetAgents
 from common.replay_buffer import ReplayBuffer
 import matplotlib.pyplot as plt
 from tqdm import tqdm
@@ -21,10 +21,16 @@ class Runner:
                                           replay_dir=args.replay_dir,
                                           reward_sparse=True,
                                           reward_scale=False)
-        self.agents = Agents(args)
-        self.rolloutWorker = RolloutWorker(env, self.agents, args)
-        self.evaluateWorker = RolloutWorker(self.env_evaluate, self.agents, args)
-        if args.alg != 'coma':
+
+        if args.alg == 'commnet_coma':
+            self.agents = CommNetAgents(args)
+            self.rolloutWorker = CommNetRolloutWorker(env, self.agents, args)
+            self.evaluateWorker = CommNetRolloutWorker(self.env_evaluate, self.agents, args)
+        else:
+            self.agents = Agents(args)
+            self.rolloutWorker = RolloutWorker(env, self.agents, args)
+            self.evaluateWorker = RolloutWorker(self.env_evaluate, self.agents, args)
+        if args.alg != 'coma' and args.alg != 'commnet_coma':
             self.buffer = ReplayBuffer(args)
         self.args = args
 
@@ -46,14 +52,14 @@ class Runner:
             for episode_idx in range(self.args.n_episodes):
                 episode, _ = self.rolloutWorker.generate_episode()
                 episodes.append(episode)
-                # print(_)
+                print(_)
             # episode的每一项都是一个(1, episode_len, n_agents, 具体维度)四维数组，下面要把所有episode的的obs拼在一起
             episode_batch = episodes[0]
             episodes.pop(0)
             for episode in episodes:
                 for key in episode_batch.keys():
                     episode_batch[key] = np.concatenate((episode_batch[key], episode[key]), axis=0)
-            if self.args.alg == 'coma':
+            if self.args.alg == 'coma' or self.args.alg == 'commnet_coma':
                 self.agents.train(episode_batch, train_steps, self.rolloutWorker.epsilon)
                 train_steps += 1
             else:

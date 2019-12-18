@@ -1,11 +1,11 @@
 import torch
 import os
-from network.rnn import RNN
+from network.commnet import CommNet
 from network.coma_critic import ComaCritic
 from common.utils import td_lambda_target
 
 
-class COMA:
+class CommNetComa:
     def __init__(self, args):
         self.n_actions = args.n_actions
         self.n_agents = args.n_agents
@@ -22,7 +22,7 @@ class COMA:
 
         # 神经网络
         # 每个agent选动作的网络,输出当前agent所有动作对应的概率，用该概率选动作的时候还需要用softmax再运算一次。
-        self.eval_rnn = RNN(actor_input_shape, args)
+        self.eval_rnn = CommNet(actor_input_shape, args)
 
         # 得到当前agent的所有可执行动作对应的联合Q值，得到之后需要用该Q值和actor网络输出的概率计算advantage
         self.eval_critic = ComaCritic(critic_input_shape, self.args)
@@ -210,7 +210,7 @@ class COMA:
         action_prob = []
         for transition_idx in range(max_episode_len):
             inputs = self._get_actor_inputs(batch, transition_idx)  # 给obs加last_action、agent_id
-            outputs, self.eval_hidden = self.eval_rnn.forward(inputs, self.eval_hidden)  # inputs维度为(40,96)，得到的q_eval维度为(40,n_actions)
+            outputs, self.eval_hidden = self.eval_rnn(inputs, self.eval_hidden)  # inputs维度为(40,96)，得到的q_eval维度为(40,n_actions)
             # 把q_eval维度重新变回(8, 5,n_actions)
             outputs = outputs.view(episode_num, self.n_agents, -1)
             prob = torch.nn.functional.softmax(outputs, dim=-1)

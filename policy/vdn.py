@@ -103,8 +103,8 @@ class VDN:
         inputs, inputs_next = [], []
         inputs.append(obs)
         inputs_next.append(obs_next)
-        # 给obs添加上一个动作、agent编号
 
+        # 给obs添加上一个动作、agent编号
         if self.args.last_action:
             if transition_idx == 0:  # 如果是第一条经验，就让前一个动作为0向量
                 inputs.append(torch.zeros_like(u_onehot[:, transition_idx]))
