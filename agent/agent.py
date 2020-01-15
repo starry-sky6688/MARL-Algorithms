@@ -5,7 +5,6 @@ from policy.qmix import QMIX
 from policy.coma import COMA
 from policy.qtran_alt import QtranAlt
 from policy.qtran_base import QtranBase
-from policy.commnet_coma import CommNetComa
 from torch.distributions import Categorical
 
 
@@ -35,7 +34,6 @@ class Agents:
         # 传入的agent_num是一个整数，代表第几个agent，现在要把他变成一个onehot向量
         agent_id = np.zeros(self.n_agents)
         agent_id[agent_num] = 1.
-
         if self.args.last_action:
             inputs = np.hstack((inputs, last_action))  # obs是数组，不能append
         if self.args.reuse_network:
@@ -44,9 +42,12 @@ class Agents:
         # 转化成Tensor,inputs的维度是(42,)，要转化成(1,42)
         inputs = torch.tensor(inputs, dtype=torch.float32).unsqueeze(0)
         avail_actions = torch.tensor(avail_actions, dtype=torch.float32).unsqueeze(0)
+        if self.args.cuda:
+            inputs = inputs.cuda()
+            hidden_state = hidden_state.cuda()
         q_value, self.policy.eval_hidden[:, agent_num, :] = self.policy.eval_rnn.forward(inputs, hidden_state)
         if self.args.alg == 'coma':
-            action = self._choose_coma_action(q_value, avail_actions, epsilon, evaluate)
+            action = self._choose_coma_action(q_value.cpu(), avail_actions, epsilon, evaluate)
         else:
             q_value[avail_actions == 0.0] = - float("inf")  # 传入的avail_actions参数是一个array
             if np.random.uniform() < epsilon:
@@ -103,7 +104,7 @@ class CommNetAgents:
         self.n_agents = args.n_agents
         self.state_shape = args.state_shape
         self.obs_shape = args.obs_shape
-        self.policy = CommNetComa(args)
+        self.policy = COMA(args)
         self.args = args
 
     # 根据weights得到概率，然后再根据epsilon选动作
@@ -140,8 +141,12 @@ class CommNetAgents:
         if self.args.reuse_network:
             inputs.append(torch.eye(self.args.n_agents))
         inputs = torch.cat([x for x in inputs], dim=1)
-        weights, self.policy.eval_hidden = self.policy.eval_rnn.forward(inputs, self.policy.eval_hidden)
-        return weights
+        if self.args.cuda:
+            inputs = inputs.cuda()
+            self.policy.eval_hidden = self.policy.eval_hidden.cuda()
+        weights, self.policy.eval_hidden = self.policy.eval_rnn(inputs, self.policy.eval_hidden)
+        weights = weights.reshape(self.args.n_agents, self.args.n_actions)
+        return weights.cpu()
 
     def _get_max_episode_len(self, batch):
         terminated = batch['terminated']

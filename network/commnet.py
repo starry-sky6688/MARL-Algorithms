@@ -3,11 +3,12 @@ import torch.nn as nn
 import torch.nn.functional as f
 
 
+# 输入所有agent的obs，输出所有agent的动作
 class CommNet(nn.Module):
     def __init__(self, input_shape, args):
         super(CommNet, self).__init__()
-        self.encoding = nn.Linear(input_shape, args.rnn_hidden_dim)
-        self.f = nn.GRUCell(args.rnn_hidden_dim, args.rnn_hidden_dim)
+        self.encoding = nn.Linear(input_shape, args.rnn_hidden_dim)  # 对所有agent的obs解码
+        self.f = nn.GRUCell(args.rnn_hidden_dim, args.rnn_hidden_dim)  # 每个agent根据自己的obs编码得到hidden_state
         self.decoding = nn.Linear(args.rnn_hidden_dim, args.n_actions)
         self.args = args
         self.input_shape = input_shape
@@ -18,10 +19,10 @@ class CommNet(nn.Module):
         return self.encoding.weight.new(1, self.args.rnn_hidden_dim).zero_()
 
     def forward(self, obs, hidden_state):
-        h_in = hidden_state.reshape(-1, self.args.rnn_hidden_dim)
-
         # 先对obs编码
-        obs_encoding = torch.sigmoid(self.encoding(obs))
+        obs_encoding = torch.sigmoid(self.encoding(obs))  # .reshape(-1, self.args.n_agents, self.args.rnn_hidden_dim)
+
+        h_in = hidden_state.reshape(-1, self.args.rnn_hidden_dim)
 
         # 第一次经过f得到h
         h = self.f(obs_encoding, h_in)

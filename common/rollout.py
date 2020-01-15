@@ -17,7 +17,7 @@ class RolloutWorker:
         self.anneal_epsilon = args.anneal_epsilon
         self.min_epsilon = args.min_epsilon
 
-    def generate_episode(self, evaluate=False):
+    def generate_episode(self, episode_num=None, evaluate=False):
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
         self.env.reset()
         terminated = False
@@ -26,6 +26,11 @@ class RolloutWorker:
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
         self.agents.policy.init_hidden(1)  # 初始化hidden_state
         epsilon = 0 if evaluate else self.epsilon
+        if self.args.epsilon_anneal_scale == 'episode':
+            epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+        if self.args.epsilon_anneal_scale == 'epoch':
+            if episode_num == 0:
+                epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         while not terminated:
             # time.sleep(0.2)
             obs = self.env.get_obs()
@@ -112,10 +117,9 @@ class RolloutWorker:
                        )
         for key in episode.keys():
             episode[key] = np.array([episode[key]])
-        if self.args.epsilon_anneal_scale == 'episode':
-            epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         if not evaluate:
             self.epsilon = epsilon
+            # print('Epsilon is ', self.epsilon)
         return episode, episode_reward
         # 因为buffer里存的是四维的，这里得到的episode只有三维，即transition、agent、shape三个维度，
         # 还差一个episode维度，所以给它加一维
@@ -136,7 +140,7 @@ class CommNetRolloutWorker:
         self.anneal_epsilon = args.anneal_epsilon
         self.min_epsilon = args.min_epsilon
 
-    def generate_episode(self, evaluate=False):
+    def generate_episode(self, episode_num=None, evaluate=False):
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
         self.env.reset()
         terminated = False
@@ -145,6 +149,11 @@ class CommNetRolloutWorker:
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
         self.agents.policy.init_hidden(1)  # 初始化hidden_state
         epsilon = 0 if evaluate else self.epsilon
+        if self.args.epsilon_anneal_scale == 'episode':
+            epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+        if self.args.epsilon_anneal_scale == 'epoch':
+            if episode_num == 0:
+                epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         while not terminated:
             # time.sleep(0.2)
             obs = self.env.get_obs()
@@ -232,10 +241,9 @@ class CommNetRolloutWorker:
                        )
         for key in episode.keys():
             episode[key] = np.array([episode[key]])
-        if self.args.epsilon_anneal_scale == 'episode':
-            epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         if not evaluate:
             self.epsilon = epsilon
+            # print('Epsilon is ', self.epsilon)
         return episode, episode_reward
         # 因为buffer里存的是四维的，这里得到的episode只有三维，即transition、agent、shape三个维度，
         # 还差一个episode维度，所以给它加一维

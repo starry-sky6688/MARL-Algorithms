@@ -12,9 +12,18 @@ class QMixNet(nn.Module):
 
         # args.n_agents代表使用hyper_w1作为参数的网络的输入维度，args.qmix_hidden_dim代表网络隐藏层参数个数
         # 从而经过hyper_w1得到(经验条数，args.qmix_hidden_dim)的矩阵
-        self.hyper_w1 = nn.Linear(args.state_shape, args.n_agents * args.qmix_hidden_dim)
-        # 经过hyper_w2得到(经验条数, 1)的矩阵
-        self.hyper_w2 = nn.Linear(args.state_shape, args.qmix_hidden_dim * 1)
+        if args.two_hyper_layers:
+            self.hyper_w1 = nn.Sequential(nn.Linear(args.state_shape, args.hyper_hidden_dim),
+                                          nn.ReLU(),
+                                          nn.Linear(args.hyper_hidden_dim, args.n_agents * args.qmix_hidden_dim))
+            # 经过hyper_w2得到(经验条数, 1)的矩阵
+            self.hyper_w2 = nn.Sequential(nn.Linear(args.state_shape, args.hyper_hidden_dim),
+                                          nn.ReLU(),
+                                          nn.Linear(args.hyper_hidden_dim, args.qmix_hidden_dim))
+        else:
+            self.hyper_w1 = nn.Linear(args.state_shape, args.n_agents * args.qmix_hidden_dim)
+            # 经过hyper_w2得到(经验条数, 1)的矩阵
+            self.hyper_w2 = nn.Linear(args.state_shape, args.qmix_hidden_dim * 1)
 
         # hyper_w1得到的(经验条数，args.qmix_hidden_dim)矩阵需要同样维度的hyper_b1
         self.hyper_b1 = nn.Linear(args.state_shape, args.qmix_hidden_dim)

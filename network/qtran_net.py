@@ -52,6 +52,8 @@ class QtranQAlt(nn.Module):
         # 把每个agent自己的动作置0
         action_mask = (1 - torch.eye(n_agents))  # th.eye（）生成一个二维对角矩阵
         action_mask = action_mask.view(-1, 1).repeat(1, n_actions).view(n_agents, -1)
+        if self.args.cuda:
+            action_mask = action_mask.cuda()
         action_encoding = action_encoding * action_mask.unsqueeze(0).unsqueeze(0)
         # 因为现在所有agent的动作都在最后一维，不能直接加。所以先扩展一维，相加后再去掉
         action_encoding = action_encoding.reshape(episode_num, max_episode_len, n_agents, n_agents, n_actions)

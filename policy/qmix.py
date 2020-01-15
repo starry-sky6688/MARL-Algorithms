@@ -22,7 +22,12 @@ class QMIX:
         self.target_rnn = RNN(input_shape, args)
         self.eval_qmix_net = QMixNet(args)  # 把agentsQ值加起来的网络
         self.target_qmix_net = QMixNet(args)
-
+        self.args = args
+        if self.args.cuda:
+            self.eval_rnn.cuda()
+            self.target_rnn.cuda()
+            self.eval_qmix_net.cuda()
+            self.target_qmix_net.cuda()
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
         if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
@@ -39,7 +44,6 @@ class QMIX:
         self.eval_parameters = list(self.eval_qmix_net.parameters()) + list(self.eval_rnn.parameters())
         if args.optimizer == "RMS":
             self.optimizer = torch.optim.RMSprop(self.eval_parameters, lr=args.lr)
-        self.args = args
 
         # 执行过程中，要为每个agent都维护一个eval_hidden
         # 学习过程中，要为每个episode的每个agent都维护一个eval_hidden、target_hidden
@@ -64,9 +68,16 @@ class QMIX:
                                                              batch['r'],  batch['avail_u'], batch['avail_u_next'],\
                                                              batch['terminated']
         mask = 1 - batch["padded"].float()  # 用来把那些填充的经验的TD-error置0，从而不让它们影响到学习
+
         # 得到每个agent对应的Q值，维度为(episode个数, max_episode_len， n_agents， n_actions)
         q_evals, q_targets = self.get_q_values(batch, max_episode_len)
-
+        if self.args.cuda:
+            s = s.cuda()
+            u = u.cuda()
+            r = r.cuda()
+            s_next = s_next.cuda()
+            terminated = terminated.cuda()
+            mask = mask.cuda()
         # 取每个agent动作对应的Q值，并且把最后不需要的一维去掉，因为最后一维只有一个值了
         q_evals = torch.gather(q_evals, dim=3, index=u).squeeze(3)
 
@@ -75,8 +86,8 @@ class QMIX:
         q_targets[avail_u_next == 0.0] = - 9999999
         q_targets = q_targets.max(dim=3)[0]
 
-        q_total_eval = self.eval_qmix_net.forward(q_evals, s)
-        q_total_target = self.target_qmix_net.forward(q_targets, s_next)
+        q_total_eval = self.eval_qmix_net(q_evals, s)
+        q_total_target = self.target_qmix_net(q_targets, s_next)
 
         targets = r + self.args.gamma * q_total_target * (1 - terminated)
 
@@ -128,8 +139,13 @@ class QMIX:
         q_evals, q_targets = [], []
         for transition_idx in range(max_episode_len):
             inputs, inputs_next = self._get_inputs(batch, transition_idx)  # 给obs加last_action、agent_id
-            q_eval, self.eval_hidden = self.eval_rnn.forward(inputs, self.eval_hidden)  # inputs维度为(40,96)，得到的q_eval维度为(40,n_actions)
-            q_target, self.target_hidden = self.target_rnn.forward(inputs_next, self.target_hidden)
+            if self.args.cuda:
+                inputs = inputs.cuda()
+                inputs_next = inputs_next.cuda()
+                self.eval_hidden = self.eval_hidden.cuda()
+                self.target_hidden = self.target_hidden.cuda()
+            q_eval, self.eval_hidden = self.eval_rnn(inputs, self.eval_hidden)  # inputs维度为(40,96)，得到的q_eval维度为(40,n_actions)
+            q_target, self.target_hidden = self.target_rnn(inputs_next, self.target_hidden)
 
             # 把q_eval维度重新变回(8, 5,n_actions)
             q_eval = q_eval.view(episode_num, self.n_agents, -1)
