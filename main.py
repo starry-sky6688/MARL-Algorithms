@@ -4,7 +4,7 @@ from common.arguments import get_common_args, get_coma_args, get_mixer_args, get
 
 
 if __name__ == '__main__':
-    for i in range(6):
+    for i in range(8):
         args = get_common_args()
         if args.alg == 'coma':
             args = get_coma_args(args)
@@ -12,7 +12,6 @@ if __name__ == '__main__':
             args = get_commnet_args(args)
         else:
             args = get_mixer_args(args)
-        args.alg = 'vdn'
         env = StarCraft2Env(map_name=args.map,
                             step_mul=args.step_mul,
                             difficulty=args.difficulty,
@@ -30,4 +29,5 @@ if __name__ == '__main__':
         else:
             win_rate = runner.evaluate_sparse()
             print('The win rate of {} is  {}'.format(args.alg, win_rate))
+            break
         env.close()

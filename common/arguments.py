@@ -16,7 +16,7 @@ def get_common_args():
     parser.add_argument('--step_mul', type=int, default=8, help='how many steps to make an action')
     parser.add_argument('--replay_dir', type=str, default='', help='the directory of save the replay')
     # The alternative algorithms are vdn、coma、qmix、qtran_base、qtran_alt and commnet_coma
-    parser.add_argument('--alg', type=str, default='coma', help='the algorithm to train the agent')
+    parser.add_argument('--alg', type=str, default='qmix', help='the algorithm to train the agent')
     parser.add_argument('--last_action', type=bool, default=True, help='whether to use the last action to choose action')
     parser.add_argument('--reuse_network', type=bool, default=True, help='whether to use one network for all agents')
     parser.add_argument('--gamma', type=float, default=0.99, help='the discount factor')
@@ -24,7 +24,7 @@ def get_common_args():
     parser.add_argument('--evaluate_epoch', type=int, default=20, help='the number of the epoch to evaluate the agent')
     parser.add_argument('--model_dir', type=str, default='./model', help='the model directory of the policy')
     parser.add_argument('--result_dir', type=str, default='./result', help='the result directory of the policy')
-    parser.add_argument('--learn', type=bool, default=True, help='whether to train the model')
+    parser.add_argument('--learn', type=bool, default=False, help='whether to train the model')
     parser.add_argument('--cuda', type=bool, default=False, help='whether to use the GPU')
     parser.add_argument('--threshold', type=int, default=19, help='the threshold to judge whether win')
     args = parser.parse_args()
@@ -87,7 +87,7 @@ def get_mixer_args(args):
     args.epsilon_anneal_scale = 'step'
 
     # the number of the epoch to train the agent
-    args.n_epoch = 6000
+    args.n_epoch = 5000
 
     # the number of the episodes in one epoch
     args.n_episodes = 8
