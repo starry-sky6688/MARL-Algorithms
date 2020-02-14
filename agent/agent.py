@@ -3,6 +3,7 @@ import torch
 from policy.vdn import VDN
 from policy.qmix import QMIX
 from policy.coma import COMA
+from policy.commnet_coma import CommNetComa
 from policy.qtran_alt import QtranAlt
 from policy.qtran_base import QtranBase
 from torch.distributions import Categorical
@@ -104,7 +105,7 @@ class CommNetAgents:
         self.n_agents = args.n_agents
         self.state_shape = args.state_shape
         self.obs_shape = args.obs_shape
-        self.policy = COMA(args)
+        self.policy = CommNetComa(args)
         self.args = args
 
     # 根据weights得到概率，然后再根据epsilon选动作

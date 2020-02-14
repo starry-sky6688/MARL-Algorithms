@@ -25,7 +25,7 @@ def get_common_args():
     parser.add_argument('--model_dir', type=str, default='./model', help='the model directory of the policy')
     parser.add_argument('--result_dir', type=str, default='./result', help='the result directory of the policy')
     parser.add_argument('--learn', type=bool, default=False, help='whether to train the model')
-    parser.add_argument('--cuda', type=bool, default=False, help='whether to use the GPU')
+    parser.add_argument('--cuda', type=bool, default=True, help='whether to use the GPU')
     parser.add_argument('--threshold', type=int, default=19, help='the threshold to judge whether win')
     args = parser.parse_args()
     return args

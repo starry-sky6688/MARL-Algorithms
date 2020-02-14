@@ -35,12 +35,12 @@ class COMA:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        if os.path.exists(self.model_dir + '/rnn_params.pkl'):
-            path_rnn = self.model_dir + '/rnn_params.pkl'
-            path_coma = self.model_dir + '/critic_params.pkl'
-            self.eval_rnn.load_state_dict(torch.load(path_rnn))
-            self.eval_critic.load_state_dict(torch.load(path_coma))
-            print('Successfully load the model: {} and {}'.format(path_rnn, path_coma))
+        # if os.path.exists(self.model_dir + '/rnn_params.pkl'):
+        #     path_rnn = self.model_dir + '/rnn_params.pkl'
+        #     path_coma = self.model_dir + '/critic_params.pkl'
+        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
+        #     self.eval_critic.load_state_dict(torch.load(path_coma))
+        #     print('Successfully load the model: {} and {}'.format(path_rnn, path_coma))
 
         # 让target_net和eval_net的网络参数相同
         self.target_critic.load_state_dict(self.eval_critic.state_dict())
@@ -215,8 +215,6 @@ class COMA:
         return inputs
 
     def _get_action_prob(self, batch, max_episode_len, epsilon):
-
-        # TODO CUDA
         episode_num = batch['o'].shape[0]
         avail_actions = batch['avail_u']  # coma不用target_actor，所以不需要最后一个obs的下一个可执行动作
         action_prob = []
@@ -224,7 +222,7 @@ class COMA:
             inputs = self._get_actor_inputs(batch, transition_idx)  # 给obs加last_action、agent_id
             if self.args.cuda:
                 inputs = inputs.cuda()
-                self.eval_hidden = self.eval_hidden.cuda
+                self.eval_hidden = self.eval_hidden.cuda()
             outputs, self.eval_hidden = self.eval_rnn(inputs, self.eval_hidden)  # inputs维度为(40,96)，得到的q_eval维度为(40,n_actions)
             # 把q_eval维度重新变回(8, 5,n_actions)
             outputs = outputs.view(episode_num, self.n_agents, -1)
@@ -270,7 +268,8 @@ class COMA:
         q_evals = torch.gather(q_evals, dim=3, index=u).squeeze(3)
         q_next_target = torch.gather(q_next_target, dim=3, index=u_next).squeeze(3)
         targets = td_lambda_target(batch, max_episode_len, q_next_target.cpu(), self.args)
-
+        if self.args.cuda:
+            targets = targets.cuda()
         td_error = targets.detach() - q_evals
         masked_td_error = mask * td_error  # 抹掉填充的经验的td_error
 
