@@ -34,12 +34,10 @@ The running of DyMA-CL is independent from others, for more details, please read
 
 ## Result
 
-We independently train these algorithms for 8 times and take the mean of the 8 independent results. In order to make the curves smoother, we also take the mean of every five points in the horizontal direction. In each independent training process, we train these algorithms for 5000 epochs and evaluate them for every 5 epochs.
-From the figure 1 we can see that our results is not the same as in the papers, maybe there are some small bugs, we are pleasure that you pull request to improve this project.
-Furthermore, as show in figure 2, we compare the best performance in the 8 independent results of these algorithms. 
+We independently train these algorithms for 8 times and take the mean of the 8 independent results. In order to make the curves smoother, we also take the mean of every five points in the horizontal direction. In each independent training process, we train these algorithms for 5000 epochs and evaluate them for every 5 epochs. From the figure 1 we can see that our results is not the same as in the papers, maybe there are some small bugs, we are pleasure that you pull request to improve this project. Furthermore, as show in figure 2, we compare the best result we think in the 8 independent results. All of the results are saved in './result'.
 
 ### 1. Mean Win Rate of 8 Independent Runs on '3m'
-<div align=center><img width = '500' height ='250' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview.png"/></div>
+<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview.png"/></div>
 
 ### 2. Best Win Rate of 8 Independent Runs on '3m'
-<div align=center><img width = '500' height ='250' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/best/best.png"/></div>
+<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/best/best.png"/></div>
