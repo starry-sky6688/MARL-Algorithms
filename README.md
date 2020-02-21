@@ -31,7 +31,7 @@ $ python main.py --evaluate_epoch=100 --map=3m --alg=qmix
 
 Directly run the main.py, then the algorithm will be tested on map '3m' for 100 episodes, using the pretrained model. 
 
-The running of DyMA-CL is independent from others, for more details, please read [DyMA-CL documentation](dyma/README.md).
+The running of DyMA-CL is independent from others beacuse it requires different environment settings, you should open it as a new project, for more details, please read [DyMA-CL documentation](dyma/README.md).
 
 ## Result
 
