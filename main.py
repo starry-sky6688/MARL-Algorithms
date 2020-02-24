@@ -4,7 +4,7 @@ from common.arguments import get_common_args, get_coma_args, get_mixer_args, get
 
 
 if __name__ == '__main__':
-    for i in range(8):
+    for i in range(20, 30):
 
         args = get_common_args()
         if args.alg.find('coma') > -1:

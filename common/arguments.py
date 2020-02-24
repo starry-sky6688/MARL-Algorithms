@@ -18,7 +18,7 @@ def get_common_args():
     # The alternative algorithms are vdn, coma, central_v, qmix, qtran_base,
     # qtran_alt, reinforce, coma+commnet, central_v+commnet, reinforce+commnet，
     # coma+g2anet, central_v+g2anet, reinforce+g2anet
-    parser.add_argument('--alg', type=str, default='reinforce+g2anet', help='the algorithm to train the agent')
+    parser.add_argument('--alg', type=str, default='qmix', help='the algorithm to train the agent')
     parser.add_argument('--last_action', type=bool, default=True, help='whether to use the last action to choose action')
     parser.add_argument('--reuse_network', type=bool, default=True, help='whether to use one network for all agents')
     parser.add_argument('--gamma', type=float, default=0.99, help='the discount factor')
@@ -27,7 +27,7 @@ def get_common_args():
     parser.add_argument('--model_dir', type=str, default='./model', help='the model directory of the policy')
     parser.add_argument('--result_dir', type=str, default='./result', help='the result directory of the policy')
     parser.add_argument('--learn', type=bool, default=True, help='whether to train the model')
-    parser.add_argument('--cuda', type=bool, default=True, help='whether to use the GPU')
+    parser.add_argument('--cuda', type=bool, default=False, help='whether to use the GPU')
     parser.add_argument('--threshold', type=int, default=19, help='the threshold to judge whether win')
     args = parser.parse_args()
     return args
