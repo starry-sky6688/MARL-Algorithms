@@ -16,6 +16,7 @@ class RolloutWorker:
         self.epsilon = args.epsilon
         self.anneal_epsilon = args.anneal_epsilon
         self.min_epsilon = args.min_epsilon
+        print('Init RolloutWorker')
 
     def generate_episode(self, episode_num=None, evaluate=False):
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
@@ -51,7 +52,7 @@ class RolloutWorker:
 
             reward, terminated, _ = self.env.step(actions)
             if step == self.episode_limit - 1:
-                terminated = True
+                terminated = 1
 
             o.append(obs)
             s.append(state)
@@ -125,7 +126,7 @@ class RolloutWorker:
         # 还差一个episode维度，所以给它加一维
 
 
-class CommNetRolloutWorker:
+class CommRolloutWorker:
     def __init__(self, env, agents, args):
         self.env = env
         self.agents = agents
@@ -139,6 +140,7 @@ class CommNetRolloutWorker:
         self.epsilon = args.epsilon
         self.anneal_epsilon = args.anneal_epsilon
         self.min_epsilon = args.min_epsilon
+        print('Init CommRolloutWorker')
 
     def generate_episode(self, episode_num=None, evaluate=False):
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
@@ -175,7 +177,7 @@ class CommNetRolloutWorker:
 
             reward, terminated, _ = self.env.step(actions)
             if step == self.episode_limit - 1:
-                terminated = True
+                terminated = 1
 
             o.append(obs)
             s.append(state)

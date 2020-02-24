@@ -13,7 +13,7 @@ from common.arguments import get_mixer_args
 
 def plt_win_rate_mean():
     path = []
-    alg_num = 6
+    alg_num = 7
     win_rates = [[] for _ in range(alg_num)]
     game_map = '3m'
     path.append('./result/vdn/' + game_map)
@@ -21,7 +21,8 @@ def plt_win_rate_mean():
     path.append('./result/qtran_base/' + game_map)
     path.append('./result/qtran_alt/' + game_map)
     path.append('./result/coma/' + game_map)
-    path.append('./result/commnet_coma/' + game_map)
+    path.append('./result/reinforce+commnet/' + game_map)
+    path.append('./result/reinforce+g2anet/' + game_map)
     num_run = 8
     for i in range(alg_num):
         for j in range(num_run):
@@ -51,7 +52,8 @@ def plt_win_rate_mean():
     plt.plot(range(len(win_rates[2])), win_rates[2], c='g', label='qtran_base')
     plt.plot(range(len(win_rates[3])), win_rates[3], c='y', label='qtran_alt')
     plt.plot(range(len(win_rates[4])), win_rates[4], c='c', label='coma')
-    plt.plot(range(len(win_rates[5])), win_rates[5], c='m', label='commnet_coma')
+    plt.plot(range(len(win_rates[5])), win_rates[5], c='#FFA500', label='reinforce+commnet')
+    plt.plot(range(len(win_rates[6])), win_rates[6], c='m', label='reinforce+g2anet')
     plt.legend()
     plt.xlabel('epoch * 25')
     plt.ylabel('win_rate')
@@ -60,14 +62,15 @@ def plt_win_rate_mean():
 
 def plt_win_rate_single():
     path = []
-    alg_num = 6
+    alg_num = 7
     win_rates = []
-    path.append('./result/vdn.npy')
-    path.append('./result/qmix.npy')
-    path.append('./result/qtran_base.npy')
-    path.append('./result/qtran_alt.npy')
-    path.append('./result/coma.npy')
-    path.append('./result/commnet_coma.npy')
+    path.append('./result/best/vdn.npy')
+    path.append('./result/best/qmix.npy')
+    path.append('./result/best/qtran_base.npy')
+    path.append('./result/best/qtran_alt.npy')
+    path.append('./result/best/coma.npy')
+    path.append('./result/best/reinforce+commnet.npy')
+    path.append('./result/best/reinforce+g2anet.npy')
     for i in range(alg_num):
         win_rates.append(np.load(path[i]))
     win_rates = np.array(win_rates)
@@ -95,11 +98,13 @@ def plt_win_rate_single():
     plt.plot(range(len(win_rates[2])), win_rates[2], c='g', label='qtran_base')
     plt.plot(range(len(win_rates[3])), win_rates[3], c='y', label='qtran_alt')
     plt.plot(range(len(win_rates[4])), win_rates[4], c='c', label='coma')
-    plt.plot(range(len(win_rates[5])), win_rates[5], c='m', label='commnet_coma')
+    plt.plot(range(len(win_rates[5])), win_rates[5], c='#FFA500', label='reinforce+commnet')
+    plt.plot(range(len(win_rates[6])), win_rates[6], c='m', label='reinforce+g2anet')
+    plt.legend()
     plt.legend()
     plt.xlabel('epoch * 25')
     plt.ylabel('win_rate')
-    plt.savefig('./result/best.png')
+    plt.savefig('./result/best/best.png')
     plt.show()
 
 
@@ -156,5 +161,5 @@ def find_best_model(model_path, model_num):
 
 
 if __name__ == '__main__':
-    # plt_win_rate_mean()
-    plt_win_rate_single()
+    plt_win_rate_mean()
+    # plt_win_rate_single()

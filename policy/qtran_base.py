@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import os
-from network.rnn import RNN
+from network.base_net import RNN
 from network.qtran_net import QtranV, QtranQBase
 
 
@@ -39,14 +39,14 @@ class QtranBase:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
-            path_rnn = self.model_dir + '/rnn_net_params.pkl'
-            path_joint_q = self.model_dir + '/joint_q_params.pkl'
-            path_v = self.model_dir + '/v_params.pkl'
-            self.eval_rnn.load_state_dict(torch.load(path_rnn))
-            self.eval_joint_q.load_state_dict(torch.load(path_joint_q))
-            self.v.load_state_dict(torch.load(path_v))
-            print('Successfully load the model: {}, {} and {}'.format(path_rnn, path_joint_q, path_v))
+        # if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
+        #     path_rnn = self.model_dir + '/rnn_net_params.pkl'
+        #     path_joint_q = self.model_dir + '/joint_q_params.pkl'
+        #     path_v = self.model_dir + '/v_params.pkl'
+        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
+        #     self.eval_joint_q.load_state_dict(torch.load(path_joint_q))
+        #     self.v.load_state_dict(torch.load(path_v))
+        #     print('Successfully load the model: {}, {} and {}'.format(path_rnn, path_joint_q, path_v))
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
@@ -58,11 +58,11 @@ class QtranBase:
         if args.optimizer == "RMS":
             self.optimizer = torch.optim.RMSprop(self.eval_parameters, lr=args.lr)
 
-
         # 执行过程中，要为每个agent都维护一个eval_hidden
         # 学习过程中，要为每个episode的每个agent都维护一个eval_hidden、target_hidden
         self.eval_hidden = None
         self.target_hidden = None
+        print('Init alg QTRAN-base')
 
     def learn(self, batch, max_episode_len, train_step, epsilon=None):  # train_step表示是第几次学习，用来控制更新target_net网络的参数
         '''

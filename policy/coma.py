@@ -1,6 +1,8 @@
 import torch
 import os
-from network.rnn import RNN
+from network.base_net import RNN
+from network.commnet import CommNet
+from network.g2anet import G2ANet
 from network.coma_critic import ComaCritic
 from common.utils import td_lambda_target
 
@@ -22,7 +24,17 @@ class COMA:
 
         # 神经网络
         # 每个agent选动作的网络,输出当前agent所有动作对应的概率，用该概率选动作的时候还需要用softmax再运算一次。
-        self.eval_rnn = RNN(actor_input_shape, args)
+        if self.args.alg == 'coma':
+            print('Init alg coma')
+            self.eval_rnn = RNN(actor_input_shape, args)
+        elif self.args.alg == 'coma+commnet':
+            print('Init alg coma+commnet')
+            self.eval_rnn = CommNet(actor_input_shape, args)
+        elif self.args.alg == 'coma+g2anet':
+            print('Init alg coma+g2anet')
+            self.eval_rnn = G2ANet(actor_input_shape, args)
+        else:
+            raise Exception("No such algorithm")
 
         # 得到当前agent的所有可执行动作对应的联合Q值，得到之后需要用该Q值和actor网络输出的概率计算advantage
         self.eval_critic = ComaCritic(critic_input_shape, self.args)

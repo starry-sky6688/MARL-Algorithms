@@ -15,8 +15,10 @@ def get_common_args():
     parser.add_argument('--seed', type=int, default=123, help='random seed')
     parser.add_argument('--step_mul', type=int, default=8, help='how many steps to make an action')
     parser.add_argument('--replay_dir', type=str, default='', help='the directory of save the replay')
-    # The alternative algorithms are vdn、coma、qmix、qtran_base、qtran_alt and commnet_coma
-    parser.add_argument('--alg', type=str, default='qmix', help='the algorithm to train the agent')
+    # The alternative algorithms are vdn, coma, central_v, qmix, qtran_base,
+    # qtran_alt, reinforce, coma+commnet, central_v+commnet, reinforce+commnet，
+    # coma+g2anet, central_v+g2anet, reinforce+g2anet
+    parser.add_argument('--alg', type=str, default='reinforce+g2anet', help='the algorithm to train the agent')
     parser.add_argument('--last_action', type=bool, default=True, help='whether to use the last action to choose action')
     parser.add_argument('--reuse_network', type=bool, default=True, help='whether to use one network for all agents')
     parser.add_argument('--gamma', type=float, default=0.99, help='the discount factor')
@@ -24,7 +26,7 @@ def get_common_args():
     parser.add_argument('--evaluate_epoch', type=int, default=20, help='the number of the epoch to evaluate the agent')
     parser.add_argument('--model_dir', type=str, default='./model', help='the model directory of the policy')
     parser.add_argument('--result_dir', type=str, default='./result', help='the result directory of the policy')
-    parser.add_argument('--learn', type=bool, default=False, help='whether to train the model')
+    parser.add_argument('--learn', type=bool, default=True, help='whether to train the model')
     parser.add_argument('--cuda', type=bool, default=True, help='whether to use the GPU')
     parser.add_argument('--threshold', type=int, default=19, help='the threshold to judge whether win')
     args = parser.parse_args()
@@ -117,8 +119,8 @@ def get_mixer_args(args):
     return args
 
 
-# arguments of commnet_coma
-def get_commnet_args(args):
+# arguments of central_v
+def get_centralv_args(args):
     # network
     args.rnn_hidden_dim = 64
     args.critic_dim = 128
@@ -131,8 +133,43 @@ def get_commnet_args(args):
     args.min_epsilon = 0.02
     args.epsilon_anneal_scale = 'epoch'
 
+    # the number of the epoch to train the agent
+    args.n_epoch = 5000
+
+    # the number of the episodes in one epoch
+    args.n_episodes = 5
+
+    # how often to evaluate
+    args.evaluate_cycle = 5
+
     # lambda of td-lambda return
     args.td_lambda = 0.8
+
+    # how often to save the model
+    args.save_cycle = 1000
+
+    # how often to update the target_net
+    args.target_update_cycle = 200
+
+    # prevent gradient explosion
+    args.grad_norm_clip = 10
+
+    return args
+
+
+# arguments of central_v
+def get_reinforce_args(args):
+    # network
+    args.rnn_hidden_dim = 64
+    args.critic_dim = 128
+    args.lr_actor = 1e-4
+    args.lr_critic = 1e-3
+
+    # epsilon-greedy
+    args.epsilon = 0.5
+    args.anneal_epsilon = 0.00064
+    args.min_epsilon = 0.02
+    args.epsilon_anneal_scale = 'epoch'
 
     # the number of the epoch to train the agent
     args.n_epoch = 5000
@@ -146,15 +183,23 @@ def get_commnet_args(args):
     # how often to save the model
     args.save_cycle = 1000
 
-    # how often to update the target_net
-    args.target_update_cycle = 200
-
     # prevent gradient explosion
     args.grad_norm_clip = 10
 
-    # communication steps
-    args.k = 2
-
     return args
 
+
+# arguments of coma+commnet
+def get_commnet_args(args):
+    if args.map == '3m':
+        args.k = 2
+    else:
+        args.k = 3
+    return args
+
+
+def get_g2anet_args(args):
+    args.attention_dim = 32
+    args.hard = False
+    return args
 

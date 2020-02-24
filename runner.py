@@ -1,7 +1,7 @@
 import numpy as np
 import os
-from common.rollout import RolloutWorker, CommNetRolloutWorker
-from agent.agent import Agents, CommNetAgents
+from common.rollout import RolloutWorker, CommRolloutWorker
+from agent.agent import Agents, CommAgents
 from common.replay_buffer import ReplayBuffer
 import matplotlib.pyplot as plt
 # from tqdm import tqdm
@@ -22,15 +22,15 @@ class Runner:
                                           reward_sparse=True,
                                           reward_scale=False)
 
-        if args.alg == 'commnet_coma':
-            self.agents = CommNetAgents(args)
-            self.rolloutWorker = CommNetRolloutWorker(env, self.agents, args)
-            self.evaluateWorker = CommNetRolloutWorker(self.env_evaluate, self.agents, args)
-        else:
+        if args.alg.find('commnet') > -1 or args.alg.find('g2anet') > -1:  # communication
+            self.agents = CommAgents(args)
+            self.rolloutWorker = CommRolloutWorker(env, self.agents, args)
+            self.evaluateWorker = CommRolloutWorker(self.env_evaluate, self.agents, args)
+        else:  # no communication
             self.agents = Agents(args)
             self.rolloutWorker = RolloutWorker(env, self.agents, args)
             self.evaluateWorker = RolloutWorker(self.env_evaluate, self.agents, args)
-        if args.alg != 'coma' and args.alg != 'commnet_coma':
+        if args.alg.find('coma') == -1 and args.alg.find('central_v') == -1 and args.alg.find('reinforce') == -1:  # these 3 algorithm are on-poliy
             self.buffer = ReplayBuffer(args)
         self.args = args
 
@@ -60,7 +60,7 @@ class Runner:
             for episode in episodes:
                 for key in episode_batch.keys():
                     episode_batch[key] = np.concatenate((episode_batch[key], episode[key]), axis=0)
-            if self.args.alg == 'coma' or self.args.alg == 'commnet_coma':
+            if self.args.alg.find('coma') == -1 or self.args.alg.find('central_v') == -1 or self.args.alg.find('reinforce') == -1:
                 self.agents.train(episode_batch, train_steps, self.rolloutWorker.epsilon)
                 train_steps += 1
             else:

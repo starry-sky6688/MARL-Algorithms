@@ -1,6 +1,6 @@
 import torch
 import os
-from network.rnn import RNN
+from network.base_net import RNN
 from network.vdn_net import VDNNet
 
 
@@ -31,12 +31,12 @@ class VDN:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
-            path_rnn = self.model_dir + '/rnn_net_params.pkl'
-            path_vdn = self.model_dir + '/vdn_net_params.pkl'
-            self.eval_rnn.load_state_dict(torch.load(path_rnn))
-            self.eval_vdn_net.load_state_dict(torch.load(path_vdn))
-            print('Successfully load the model: {} and {}'.format(path_rnn, path_vdn))
+        # if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
+        #     path_rnn = self.model_dir + '/rnn_net_params.pkl'
+        #     path_vdn = self.model_dir + '/vdn_net_params.pkl'
+        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
+        #     self.eval_vdn_net.load_state_dict(torch.load(path_vdn))
+        #     print('Successfully load the model: {} and {}'.format(path_rnn, path_vdn))
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
@@ -51,6 +51,7 @@ class VDN:
         # 学习过程中，要为每个episode的每个agent都维护一个eval_hidden、target_hidden
         self.eval_hidden = None
         self.target_hidden = None
+        print('Init alg VDN')
 
     def learn(self, batch, max_episode_len, train_step, epsilon=None):  # train_step表示是第几次学习，用来控制更新target_net网络的参数
         '''

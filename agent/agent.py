@@ -3,7 +3,8 @@ import torch
 from policy.vdn import VDN
 from policy.qmix import QMIX
 from policy.coma import COMA
-from policy.commnet_coma import CommNetComa
+from policy.reinforce import Reinforce
+from policy.central_v import CentralV
 from policy.qtran_alt import QtranAlt
 from policy.qtran_base import QtranBase
 from torch.distributions import Categorical
@@ -25,9 +26,14 @@ class Agents:
             self.policy = QtranAlt(args)
         elif args.alg == 'qtran_base':
             self.policy = QtranBase(args)
+        elif args.alg == 'central_v':
+            self.policy = CentralV(args)
+        elif args.alg == 'reinforce':
+            self.policy = Reinforce(args)
         else:
             raise Exception("No such algorithm")
         self.args = args
+        print('Init Agents')
 
     def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon, evaluate=False):
         inputs = obs.copy()
@@ -47,8 +53,8 @@ class Agents:
             inputs = inputs.cuda()
             hidden_state = hidden_state.cuda()
         q_value, self.policy.eval_hidden[:, agent_num, :] = self.policy.eval_rnn.forward(inputs, hidden_state)
-        if self.args.alg == 'coma':
-            action = self._choose_coma_action(q_value.cpu(), avail_actions, epsilon, evaluate)
+        if self.args.alg == 'coma' or self.args.alg == 'crntral_v' or self.args.alg == 'reinforce':
+            action = self._choose_action_from_softmax(q_value.cpu(), avail_actions, epsilon, evaluate)
         else:
             q_value[avail_actions == 0.0] = - float("inf")  # 传入的avail_actions参数是一个array
             if np.random.uniform() < epsilon:
@@ -57,7 +63,7 @@ class Agents:
                 action = torch.argmax(q_value)
         return action
 
-    def _choose_coma_action(self, inputs, avail_actions, epsilon, evaluate=False):  # inputs是所有动作的q值
+    def _choose_action_from_softmax(self, inputs, avail_actions, epsilon, evaluate=False):  # inputs是所有动作的q值
         action_num = avail_actions.sum(dim=1, keepdim=True).float().repeat(1, avail_actions.shape[-1])  # 可以选择的动作的个数
         # 先将Actor网络的输出通过softmax转换成概率分布
         prob = torch.nn.functional.softmax(inputs, dim=-1)
@@ -99,14 +105,23 @@ class Agents:
             self.policy.save_model(train_step)
 
 
-class CommNetAgents:
+class CommAgents:
     def __init__(self, args):
         self.n_actions = args.n_actions
         self.n_agents = args.n_agents
         self.state_shape = args.state_shape
         self.obs_shape = args.obs_shape
-        self.policy = CommNetComa(args)
+        alg = args.alg
+        if alg.find('reinforce') > -1:
+            self.policy = Reinforce(args)
+        elif alg.find('coma') > -1:
+            self.policy = COMA(args)
+        elif alg.find('central_v') > -1:
+            self.policy = CentralV(args)
+        else:
+            raise Exception("No such algorithm")
         self.args = args
+        print('Init CommAgents')
 
     # 根据weights得到概率，然后再根据epsilon选动作
     def choose_action(self, weights, avail_actions, epsilon, evaluate=False):

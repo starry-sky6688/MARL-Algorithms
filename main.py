@@ -1,17 +1,24 @@
 from runner import Runner
 from smac.env import StarCraft2Env
-from common.arguments import get_common_args, get_coma_args, get_mixer_args, get_commnet_args
+from common.arguments import get_common_args, get_coma_args, get_mixer_args, get_centralv_args, get_reinforce_args, get_commnet_args, get_g2anet_args
 
 
 if __name__ == '__main__':
     for i in range(8):
+
         args = get_common_args()
-        if args.alg == 'coma':
+        if args.alg.find('coma') > -1:
             args = get_coma_args(args)
-        elif args.alg == 'commnet_coma':
-            args = get_commnet_args(args)
+        elif args.alg.find('central_v') > -1:
+            args = get_centralv_args(args)
+        elif args.alg.find('reinforce') > -1:
+            args = get_reinforce_args(args)
         else:
             args = get_mixer_args(args)
+        if args.alg.find('commnet') > -1:
+            args = get_commnet_args(args)
+        if args.alg.find('g2anet') > -1:
+            args = get_g2anet_args(args)
         env = StarCraft2Env(map_name=args.map,
                             step_mul=args.step_mul,
                             difficulty=args.difficulty,
