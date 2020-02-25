@@ -4,9 +4,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 
 ##
 
-```
 - [x] Add CUDA option
-```
 
 ## Corresponding Papers
 
