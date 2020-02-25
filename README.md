@@ -1,10 +1,6 @@
 # StarCraft
 
-This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both QTRAN-base and QTRAN-alt), [CommNet](https://arxiv.org/abs/1605.07736), [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), which are the state of art MARL algorithms. In addition, because CommNet and G2ANet need a external training algorithm, you can combine them with COMA, we also provide `__central-v__` and `__reinforce__` for them to training. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
-
-##
-
-- [x] Add CUDA option
+This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both QTRAN-base and QTRAN-alt), [CommNet](https://arxiv.org/abs/1605.07736), [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), which are the state of art MARL algorithms. In addition, because CommNet and G2ANet need a external training algorithm, you can combine them with COMA, we also provide **Central-V** and **REINFORCE** for them to training. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
 
 ## Corresponding Papers
 
@@ -45,3 +41,10 @@ We independently train these algorithms for 8 times and take the mean of the 8 i
 
 ### 2. Best Win Rate of 8 Independent Runs on '3m'
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/best/best.png"/></div>
+
+## TODO
+
+- [x] Add CUDA option
+- [x] DyMA-CL
+- [x] G2ANet
+- [ ] Other SOTA MARL algorithms
