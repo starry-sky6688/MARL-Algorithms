@@ -24,13 +24,23 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 + [SMAC](https://github.com/oxwhirl/smac)
 + [pymarl](https://github.com/oxwhirl/pymarl)
 
+
+## TODO List
+
+- [x] Add CUDA option
+- [x] DyMA-CL
+- [x] G2ANet
+- [ ] Other SOTA MARL algorithms
+
 ## Quick Start
 
 ```shell
 $ python main.py --map=3m --alg=qmix
 ```
 
-Directly run the main.py, then the algorithm will start training on map '3m'. Note CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments`.  The running of DyMA-CL is independent from others beacuse it requires different environment settings, you should open it as a new project, for more details, please read [DyMA-CL documentation](dyma/README.md).
+Directly run the main.py, then the algorithm will start training on map '3m'. Note CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments`.
+
+The running of DyMA-CL is independent from others beacuse it requires different environment settings, you should open it as a new project, for more details, please read [DyMA-CL documentation](dyma/README.md).
 
 ## Result
 
@@ -41,10 +51,3 @@ We independently train these algorithms for 8 times and take the mean of the 8 i
 
 ### 2. Best Win Rate of 8 Independent Runs on '3m'
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/best/best.png"/></div>
-
-## TODO
-
-- [x] Add CUDA option
-- [x] DyMA-CL
-- [x] G2ANet
-- [ ] Other SOTA MARL algorithms
