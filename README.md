@@ -1,6 +1,12 @@
 # StarCraft
 
-This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both QTRAN-base and QTRAN-alt), [CommNet](https://arxiv.org/abs/1605.07736), [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), which are the state of art MARL algorithms. In addition, because CommNet and G2ANet need a external training algorithm, we provide central-v and reinforce for them to training, you can also combine them with COMA. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
+This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both QTRAN-base and QTRAN-alt), [CommNet](https://arxiv.org/abs/1605.07736), [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), which are the state of art MARL algorithms. In addition, because CommNet and G2ANet need a external training algorithm, you can combine them with COMA, we also provide `__central-v__` and `__reinforce__` for them to training. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
+
+##
+
+```
+- [x] Add CUDA option
+```
 
 ## Corresponding Papers
 
@@ -30,7 +36,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 $ python main.py --map=3m --alg=qmix
 ```
 
-Directly run the main.py, then the algorithm will start training on map '3m'. Note CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments`.    The running of DyMA-CL is independent from others beacuse it requires different environment settings, you should open it as a new project, for more details, please read [DyMA-CL documentation](dyma/README.md).
+Directly run the main.py, then the algorithm will start training on map '3m'. Note CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments`.  The running of DyMA-CL is independent from others beacuse it requires different environment settings, you should open it as a new project, for more details, please read [DyMA-CL documentation](dyma/README.md).
 
 ## Result
 
