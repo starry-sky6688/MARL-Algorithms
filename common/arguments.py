@@ -200,6 +200,6 @@ def get_commnet_args(args):
 
 def get_g2anet_args(args):
     args.attention_dim = 32
-    args.hard = False
+    args.hard = True
     return args
 
