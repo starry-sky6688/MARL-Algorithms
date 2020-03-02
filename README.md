@@ -1,6 +1,6 @@
 # StarCraft
 
-This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both QTRAN-base and QTRAN-alt), and [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), which are the state of art MARL algorithms. In addition, we implemented [CommNet](https://arxiv.org/abs/1605.07736) and combined it with coma, which we called CommNet_COMA. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
+This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both **QTRAN-base** and **QTRAN-alt**), [CommNet](https://arxiv.org/abs/1605.07736), [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), which are the state of art MARL algorithms. In addition, because CommNet and G2ANet need a external training algorithm, you can combine them with COMA, we also provide **Central-V** and **REINFORCE** for them to training. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
 
 ## Corresponding Papers
 
@@ -10,6 +10,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 - [QTRAN: Learning to Factorize with Transformation for Cooperative Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1905.05408)
 - [Learning Multiagent Communication with Backpropagation](https://arxiv.org/abs/1605.07736)
 - [From Few to More: Large-scale Dynamic Multiagent Curriculum Learning](https://arxiv.org/abs/1909.02790?context=cs.MA)
+- [Multi-Agent Game Abstraction via Graph Attention Neural Network](https://arxiv.org/abs/1911.10715)
 
 ## Requirements
 
@@ -23,22 +24,30 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 + [SMAC](https://github.com/oxwhirl/smac)
 + [pymarl](https://github.com/oxwhirl/pymarl)
 
+
+## TODO List
+
+- [x] Add CUDA option
+- [x] DyMA-CL
+- [x] G2ANet
+- [ ] Other SOTA MARL algorithms
+
 ## Quick Start
 
 ```shell
-$ python main.py --evaluate_epoch=100 --map=3m --alg=qmix
+$ python main.py --map=3m --alg=qmix
 ```
 
-Directly run the main.py, then the algorithm will be tested on map '3m' for 100 episodes, using the pretrained model. 
+Directly run the `main.py`, then the algorithm will start training on map `3m`. **Note** CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
 
 The running of DyMA-CL is independent from others beacuse it requires different environment settings, you should open it as a new project, for more details, please read [DyMA-CL documentation](dyma/README.md).
 
 ## Result
 
-We independently train these algorithms for 8 times and take the mean of the 8 independent results. In order to make the curves smoother, we also take the mean of every five points in the horizontal direction. In each independent training process, we train these algorithms for 5000 epochs and evaluate them for every 5 epochs. From the figure 1 we can see that our results is not the same as in the papers, maybe there are some small bugs, we are pleasure that you pull request to improve this project. Furthermore, as show in figure 2, we compare the best result we think in the 8 independent results. All of the results are saved in  `./result` .
+We independently train these algorithms for 8 times and take the mean of the 8 independent results. In order to make the curves smoother, we also take the mean of every five points in the horizontal direction. In each independent training process, we train these algorithms for 5000 epochs and evaluate them for every 5 epochs. Furthermore, as show in figure 2, we compare the best result we think in the 8 independent results. All of the results are saved in  `./result`.
 
-### 1. Mean Win Rate of 8 Independent Runs on '3m'
+### 1. Mean Win Rate of 8 Independent Runs on `3m`
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview.png"/></div>
 
-### 2. Best Win Rate of 8 Independent Runs on '3m'
+### 2. Best Result in 8 Independent Runs on `3m`
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/best/best.png"/></div>
