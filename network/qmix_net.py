@@ -10,8 +10,8 @@ class QMixNet(nn.Module):
         # 因为生成的hyper_w1需要是一个矩阵，而pytorch神经网络只能输出一个向量，
         # 所以就先输出长度为需要的 矩阵行*矩阵列 的向量，然后再转化成矩阵
 
-        # args.n_agents代表使用hyper_w1作为参数的网络的输入维度，args.qmix_hidden_dim代表网络隐藏层参数个数
-        # 从而经过hyper_w1得到(经验条数，args.qmix_hidden_dim)的矩阵
+        # args.n_agents是使用hyper_w1作为参数的网络的输入维度，args.qmix_hidden_dim是网络隐藏层参数个数
+        # 从而经过hyper_w1得到(经验条数，args.n_agents * args.qmix_hidden_dim)的矩阵
         if args.two_hyper_layers:
             self.hyper_w1 = nn.Sequential(nn.Linear(args.state_shape, args.hyper_hidden_dim),
                                           nn.ReLU(),
@@ -33,11 +33,11 @@ class QMixNet(nn.Module):
                                      nn.Linear(args.qmix_hidden_dim, 1)
                                      )
 
-    def forward(self, q_values, states):  # q_values的shape为(32, 60, 5)，states的shape为(32, 60, 120)
-        # 传入的q_values是三维的，shape为(episode个数, max_episode_len， n_agents)
+    def forward(self, q_values, states):  # states的shape为(episode_num, max_episode_len， state_shape)
+        # 传入的q_values是三维的，shape为(episode_num, max_episode_len， n_agents)
         episode_num = q_values.size(0)
-        q_values = q_values.view(-1, 1, self.args.n_agents)  # q_values的shape转化为(32 * 60=1920, 1, 5)
-        states = states.reshape(-1, self.args.state_shape)  # (1920, 120)
+        q_values = q_values.view(-1, 1, self.args.n_agents)  # (episode_num * max_episode_len, 1, n_agents) = (1920,1,5)
+        states = states.reshape(-1, self.args.state_shape)  # (episode_num * max_episode_len, state_shape)
 
         w1 = torch.abs(self.hyper_w1(states))  # (1920, 160)
         b1 = self.hyper_b1(states)  # (1920, 32)

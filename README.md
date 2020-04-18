@@ -14,8 +14,8 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 
 ## Requirements
 
-- python=3.6.5
-- torch=1.2.0
+- python
+- torch
 - [SMAC](https://github.com/oxwhirl/smac)
 - [pysc2](https://github.com/deepmind/pysc2)
 
@@ -30,7 +30,10 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 - [x] Add CUDA option
 - [x] DyMA-CL
 - [x] G2ANet
+- [ ] MAVEN
+- [ ] VBC
 - [ ] Other SOTA MARL algorithms
+- [ ] Update results on other maps
 
 ## Quick Start
 
@@ -38,16 +41,16 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 $ python main.py --map=3m --alg=qmix
 ```
 
-Directly run the `main.py`, then the algorithm will start training on map `3m`. **Note** CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
+Directly run the `main.py`, then the algorithm will start **training** on map `3m`， and the difficulty is **7(VeryHard)**. **Note** CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
 
-The running of DyMA-CL is independent from others beacuse it requires different environment settings, you should open it as a new project, for more details, please read [DyMA-CL documentation](dyma/README.md).
+If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. **Note** we trained these models on GPU, if you don't have CUDA, you need to train the model first.
+
+The running of DyMA-CL is independent from others because it requires different environment settings, so we put it on another project. For more details, please read [DyMA-CL documentation](https://github.com/starry-sky6688/DyMA-CL/blob/master).
 
 ## Result
 
-We independently train these algorithms for 8 times and take the mean of the 8 independent results. In order to make the curves smoother, we also take the mean of every five points in the horizontal direction. In each independent training process, we train these algorithms for 5000 epochs and evaluate them for every 5 epochs. Furthermore, as show in figure 2, we compare the best result we think in the 8 independent results. All of the results are saved in  `./result`.
+We independently train these algorithms for 8 times and take the mean of the 8 independent results. We train these algorithms for 20000 episodes and evaluate them for every 100 episodes. All of the results are saved in  `./result`.
+Result on other maps are still in training, we will update them later.
 
-### 1. Mean Win Rate of 8 Independent Runs on `3m`
+### 1. Mean Win Rate of 8 Independent Runs on `3m --difficulty=7(VeryHard)`
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview.png"/></div>
-
-### 2. Best Result in 8 Independent Runs on `3m`
-<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/best/best.png"/></div>

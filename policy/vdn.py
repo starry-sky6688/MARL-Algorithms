@@ -31,12 +31,15 @@ class VDN:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        # if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
-        #     path_rnn = self.model_dir + '/rnn_net_params.pkl'
-        #     path_vdn = self.model_dir + '/vdn_net_params.pkl'
-        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
-        #     self.eval_vdn_net.load_state_dict(torch.load(path_vdn))
-        #     print('Successfully load the model: {} and {}'.format(path_rnn, path_vdn))
+        if self.args.load_model:
+            if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
+                path_rnn = self.model_dir + '/rnn_net_params.pkl'
+                path_vdn = self.model_dir + '/vdn_net_params.pkl'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn))
+                self.eval_vdn_net.load_state_dict(torch.load(path_vdn))
+                print('Successfully load the model: {} and {}'.format(path_rnn, path_vdn))
+            else:
+                raise Exception("No model!")
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
@@ -82,8 +85,7 @@ class VDN:
         # 取每个agent动作对应的Q值，并且把最后不需要的一维去掉，因为最后一维只有一个值了
         q_evals = torch.gather(q_evals, dim=3, index=u).squeeze(3)
 
-        # 得到真正的target_q
-        # 传入的avail_u_next参数和q_targets维度一样，这样每个都对应起来，只要为0，就证明在该episode中，该transition上该agent不能执行该动作
+        # 得到target_q
         q_targets[avail_u_next == 0.0] = - 9999999
         q_targets = q_targets.max(dim=3)[0]
 
@@ -101,6 +103,7 @@ class VDN:
         # print('Loss is ', loss)
         self.optimizer.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.eval_parameters, self.args.grad_norm_clip)
         self.optimizer.step()
 
         if train_step > 0 and train_step % self.args.target_update_cycle == 0:
@@ -124,12 +127,12 @@ class VDN:
                 inputs.append(u_onehot[:, transition_idx - 1])
             inputs_next.append(u_onehot[:, transition_idx])
         if self.args.reuse_network:
-            # 因为当前的obs三维的数据，每一维分别代表(episode编号，agent编号，obs维度)，直接在dim_1上添加对应的向量
+            # 因为当前的obs三维的数据，每一维分别代表(episode，agent，obs维度)，直接在dim_1上添加对应的向量
             # 即可，比如给agent_0后面加(1, 0, 0, 0, 0)，表示5个agent中的0号。而agent_0的数据正好在第0行，那么需要加的
             # agent编号恰好就是一个单位矩阵，即对角线为1，其余为0
             inputs.append(torch.eye(self.args.n_agents).unsqueeze(0).expand(episode_num, -1, -1))
             inputs_next.append(torch.eye(self.args.n_agents).unsqueeze(0).expand(episode_num, -1, -1))
-        # 要把obs中的三个拼起来，并且要把episode_num个episode、self.args.n_agents个agent的数据拼成40条(40,96)的数据，
+        # 要把obs中的三个拼起来，并且要把episode_num个episode、self.args.n_agents个agent的数据拼成episode_num*n_agents条数据
         # 因为这里所有agent共享一个神经网络，每条数据中带上了自己的编号，所以还是自己的数据
         inputs = torch.cat([x.reshape(episode_num * self.args.n_agents, -1) for x in inputs], dim=1)
         inputs_next = torch.cat([x.reshape(episode_num * self.args.n_agents, -1) for x in inputs_next], dim=1)
@@ -146,10 +149,10 @@ class VDN:
                 inputs_next = inputs_next.cuda()
                 self.eval_hidden = self.eval_hidden.cuda()
                 self.target_hidden = self.target_hidden.cuda()
-            q_eval, self.eval_hidden = self.eval_rnn(inputs, self.eval_hidden)  # inputs维度为(40,96)，得到的q_eval维度为(40,n_actions)
+            q_eval, self.eval_hidden = self.eval_rnn(inputs, self.eval_hidden)  # 得到的q_eval维度为(episode_num*n_agents, n_actions)
             q_target, self.target_hidden = self.target_rnn(inputs_next, self.target_hidden)
 
-            # 把q_eval维度重新变回(8, 5,n_actions)
+            # 把q_eval维度重新变回(episode_num, n_agents, n_actions)
             q_eval = q_eval.view(episode_num, self.n_agents, -1)
             q_target = q_target.view(episode_num, self.n_agents, -1)
             q_evals.append(q_eval)
@@ -162,8 +165,8 @@ class VDN:
 
     def init_hidden(self, episode_num):
         # 为每个episode中的每个agent都初始化一个eval_hidden、target_hidden
-        self.eval_hidden = self.eval_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
-        self.target_hidden = self.target_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
+        self.eval_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
+        self.target_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
 
     def save_model(self, train_step):
         num = str(train_step // self.args.save_cycle)

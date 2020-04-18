@@ -9,7 +9,7 @@ Here are the param for the training
 def get_common_args():
     parser = argparse.ArgumentParser()
     # the environment setting
-    parser.add_argument('--difficulty', type=str, default='3', help='the difficulty of the game')
+    parser.add_argument('--difficulty', type=str, default='7', help='the difficulty of the game')
     parser.add_argument('--game_version', type=str, default='latest', help='the version of the game')
     parser.add_argument('--map', type=str, default='3m', help='the map of the game')
     parser.add_argument('--seed', type=int, default=123, help='random seed')
@@ -26,9 +26,10 @@ def get_common_args():
     parser.add_argument('--evaluate_epoch', type=int, default=20, help='the number of the epoch to evaluate the agent')
     parser.add_argument('--model_dir', type=str, default='./model', help='the model directory of the policy')
     parser.add_argument('--result_dir', type=str, default='./result', help='the result directory of the policy')
+    parser.add_argument('--load_model', type=bool, default=False, help='whether to load the pretrained model')
     parser.add_argument('--learn', type=bool, default=True, help='whether to train the model')
-    parser.add_argument('--cuda', type=bool, default=False, help='whether to use the GPU')
-    parser.add_argument('--threshold', type=int, default=19, help='the threshold to judge whether win')
+    parser.add_argument('--cuda', type=bool, default=True, help='whether to use the GPU')
+    parser.add_argument('--threshold', type=float, default=19.9, help='the threshold to judge whether win')
     args = parser.parse_args()
     return args
 
@@ -51,16 +52,16 @@ def get_coma_args(args):
     args.td_lambda = 0.8
 
     # the number of the epoch to train the agent
-    args.n_epoch = 5000
+    args.n_epoch = 20000
 
     # the number of the episodes in one epoch
-    args.n_episodes = 5
+    args.n_episodes = 1
 
     # how often to evaluate
-    args.evaluate_cycle = 5
+    args.evaluate_cycle = 100
 
     # how often to save the model
-    args.save_cycle = 1000
+    args.save_cycle = 5000
 
     # how often to update the target_net
     args.target_update_cycle = 200
@@ -89,16 +90,16 @@ def get_mixer_args(args):
     args.epsilon_anneal_scale = 'step'
 
     # the number of the epoch to train the agent
-    args.n_epoch = 5000
+    args.n_epoch = 20000
 
     # the number of the episodes in one epoch
-    args.n_episodes = 8
+    args.n_episodes = 1
 
     # the number of the train steps in one epoch
-    args.train_steps = 8  # qtran:8
+    args.train_steps = 1
 
     # # how often to evaluate
-    args.evaluate_cycle = 5
+    args.evaluate_cycle = 100
 
     # experience replay
     args.batch_size = 32
@@ -134,19 +135,19 @@ def get_centralv_args(args):
     args.epsilon_anneal_scale = 'epoch'
 
     # the number of the epoch to train the agent
-    args.n_epoch = 5000
+    args.n_epoch = 20000
 
     # the number of the episodes in one epoch
-    args.n_episodes = 5
+    args.n_episodes = 1
 
     # how often to evaluate
-    args.evaluate_cycle = 5
+    args.evaluate_cycle = 100
 
     # lambda of td-lambda return
     args.td_lambda = 0.8
 
     # how often to save the model
-    args.save_cycle = 1000
+    args.save_cycle = 5000
 
     # how often to update the target_net
     args.target_update_cycle = 200
@@ -172,16 +173,16 @@ def get_reinforce_args(args):
     args.epsilon_anneal_scale = 'epoch'
 
     # the number of the epoch to train the agent
-    args.n_epoch = 5000
+    args.n_epoch = 20000
 
     # the number of the episodes in one epoch
-    args.n_episodes = 5
+    args.n_episodes = 1
 
     # how often to evaluate
-    args.evaluate_cycle = 5
+    args.evaluate_cycle = 100
 
     # how often to save the model
-    args.save_cycle = 1000
+    args.save_cycle = 5000
 
     # prevent gradient explosion
     args.grad_norm_clip = 10

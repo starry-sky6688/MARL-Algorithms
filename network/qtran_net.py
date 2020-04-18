@@ -8,7 +8,6 @@ class QtranQAlt(nn.Module):
     def __init__(self, args):
         super(QtranQAlt, self).__init__()
         self.args = args
-        # TODO 把hidden_state和action分开编码，只传入其他agent 的动作
 
         # 对每个agent的action进行编码
         self.action_encoding = nn.Sequential(nn.Linear(self.args.n_actions, self.args.n_actions),
@@ -97,13 +96,13 @@ class QtranQBase(nn.Module):
         return q
 
 
-# 输入当前的state, 输出V值
+# 输入当前的state与所有agent的hidden_state, 输出V值
 class QtranV(nn.Module):
     def __init__(self, args):
         super(QtranV, self).__init__()
         self.args = args
 
-        # action_encoding对输入的每个agent的hidden_state编码，从而将所有agents的hidden_state相加得到近似的联合hidden_state
+        # hidden_encoding对输入的每个agent的hidden_state编码，从而将所有agents的hidden_state相加得到近似的联合hidden_state
         hidden_input = self.args.rnn_hidden_dim
         self.hidden_encoding = nn.Sequential(nn.Linear(hidden_input, hidden_input),
                                              nn.ReLU(),

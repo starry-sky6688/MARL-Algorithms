@@ -14,11 +14,6 @@ class CommNet(nn.Module):
         self.args = args
         self.input_shape = input_shape
 
-    def init_hidden(self):
-        # make hidden states on same device as model
-        # 返回一个1*rnn_hidden_dim的0向量
-        return self.encoding.weight.new(1, self.args.rnn_hidden_dim).zero_()
-
     def forward(self, obs, hidden_state):
         # 先对obs编码
         obs_encoding = torch.sigmoid(self.encoding(obs))  # .reshape(-1, self.args.n_agents, self.args.rnn_hidden_dim)

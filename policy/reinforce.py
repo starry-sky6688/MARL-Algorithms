@@ -38,10 +38,13 @@ class Reinforce:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        # if os.path.exists(self.model_dir + '/rnn_params.pkl'):
-        #     path_rnn = self.model_dir + '/rnn_params.pkl'
-        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
-        #     print('Successfully load the model: {}'.format(path_rnn))
+        if self.args.load_model:
+            if os.path.exists(self.model_dir + '/rnn_params.pkl'):
+                path_rnn = self.model_dir + '/rnn_params.pkl'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn))
+                print('Successfully load the model: {}'.format(path_rnn))
+            else:
+                raise Exception("No model!")
 
         self.rnn_parameters = list(self.eval_rnn.parameters())
         if args.optimizer == "RMS":
@@ -159,7 +162,7 @@ class Reinforce:
 
     def init_hidden(self, episode_num):
         # 为每个episode中的每个agent都初始化一个eval_hidden
-        self.eval_hidden = self.eval_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
+        self.eval_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
 
     def save_model(self, train_step):
         num = str(train_step // self.args.save_cycle)

@@ -15,10 +15,10 @@ class G2ANet(nn.Module):
 
         # Hard
         # GRU输入[[h_i,h_1],[h_i,h_2],...[h_i,h_n]]与[0,...,0]，输出[[h_1],[h_2],...,[h_n]]与[h_n]， h_j表示了agent j与agent i的关系
-        # 输入的iputs维度为(n_agents - 1, batch_size * n_agents, rnn_hidden_dim * 2)，即对于batch_size条数据，
-        # 输入每个agent与其他n_agents - 1个agents的hidden_state的连接
+        # 输入的iputs维度为(n_agents - 1, batch_size * n_agents, rnn_hidden_dim * 2)，
+        # 即对于batch_size条数据，输入每个agent与其他n_agents - 1个agents的hidden_state的连接
         self.hard_bi_GRU = nn.GRU(args.rnn_hidden_dim * 2, args.rnn_hidden_dim, bidirectional=True)
-        # 对h_j进行分析，得到其对应的权重gailv
+        # 对h_j进行分析，得到agent j对于agent i的权重，输出两维，经过gumble_softmax后取其中一维即可，如果是0则不考虑agent j，如果是1则考虑
         self.hard_encoding = nn.Linear(args.rnn_hidden_dim * 2, 2)  # 乘2因为是双向GRU，hidden_state维度为2 * hidden_dim
 
         # Soft
@@ -30,11 +30,6 @@ class G2ANet(nn.Module):
         self.decoding = nn.Linear(args.rnn_hidden_dim + args.attention_dim, args.n_actions)
         self.args = args
         self.input_shape = input_shape
-
-    def init_hidden(self):
-        # make hidden states on same device as model
-        # 返回一个1*rnn_hidden_dim的0向量
-        return self.encoding.weight.new(1, self.args.rnn_hidden_dim).zero_()
 
     def forward(self, obs, hidden_state):
         size = obs.shape[0]  # batch_size * n_agents
@@ -70,18 +65,13 @@ class G2ANet(nn.Module):
             h_hard, _ = self.hard_bi_GRU(input_hard, h_hard)  # (n_agents - 1,batch_size * n_agents,rnn_hidden_dim * 2)
             h_hard = h_hard.permute(1, 0, 2)  # (batch_size * n_agents, n_agents - 1, rnn_hidden_dim * 2)
             h_hard = h_hard.reshape(-1, self.args.rnn_hidden_dim * 2)  # (batch_size * n_agents * (n_agents - 1), rnn_hidden_dim * 2)
-            # TODO hard_encoding输入所有其他agent的h，而不是单独输入，这样无法在其之间进行对比
 
-            # 得到hard权重, (n_agents, batch_size, 1,  n_agents - 1)，多出一个维度，下面乘的时候要用
+            # 得到hard权重, (n_agents, batch_size, 1,  n_agents - 1)，多出一个维度，下面加权求和的时候要用
             hard_weights = self.hard_encoding(h_hard)
             hard_weights = f.gumbel_softmax(hard_weights, tau=0.01)
             # print(hard_weights)
             hard_weights = hard_weights[:, 1].view(-1, self.args.n_agents, 1, self.args.n_agents - 1)
             hard_weights = hard_weights.permute(1, 0, 2, 3)
-
-
-            # TODO
-            # hard_weights = f.gumbel_softmax(hard_weights, dim=-1)
 
         else:
             hard_weights = torch.ones((self.args.n_agents, size // self.args.n_agents, 1, self.args.n_agents - 1))

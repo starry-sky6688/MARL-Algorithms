@@ -44,12 +44,15 @@ class CentralV:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        # if os.path.exists(self.model_dir + '/rnn_params.pkl'):
-        #     path_rnn = self.model_dir + '/rnn_params.pkl'
-        #     path_critic = self.model_dir + '/critic_params.pkl'
-        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
-        #     self.eval_critic.load_state_dict(torch.load(path_critic))
-        #     print('Successfully load the model: {} and {}'.format(path_rnn, path_critic))
+        if self.args.load_model:
+            if os.path.exists(self.model_dir + '/rnn_params.pkl'):
+                path_rnn = self.model_dir + '/rnn_params.pkl'
+                path_critic = self.model_dir + '/critic_params.pkl'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn))
+                self.eval_critic.load_state_dict(torch.load(path_critic))
+                print('Successfully load the model: {} and {}'.format(path_rnn, path_critic))
+            else:
+                raise Exception("No model!")
 
         # 让target_net和eval_net的网络参数相同
         self.target_critic.load_state_dict(self.eval_critic.state_dict())
@@ -174,7 +177,7 @@ class CentralV:
 
     def init_hidden(self, episode_num):
         # 为每个episode中的每个agent都初始化一个eval_hidden
-        self.eval_hidden = self.eval_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
+        self.eval_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
 
     def _train_critic(self, batch, max_episode_len, train_step):
         r, terminated = batch['r'], batch['terminated']

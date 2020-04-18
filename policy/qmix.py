@@ -30,12 +30,15 @@ class QMIX:
             self.target_qmix_net.cuda()
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        # if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
-        #     path_rnn = self.model_dir + '/rnn_net_params.pkl'
-        #     path_qmix = self.model_dir + '/qmix_net_params.pkl'
-        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
-        #     self.eval_qmix_net.load_state_dict(torch.load(path_qmix))
-        #     print('Successfully load the model: {} and {}'.format(path_rnn, path_qmix))
+        if self.args.load_model:
+            if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
+                path_rnn = self.model_dir + '/rnn_net_params.pkl'
+                path_qmix = self.model_dir + '/qmix_net_params.pkl'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn))
+                self.eval_qmix_net.load_state_dict(torch.load(path_qmix))
+                print('Successfully load the model: {} and {}'.format(path_rnn, path_qmix))
+            else:
+                raise Exception("No model!")
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
@@ -82,8 +85,7 @@ class QMIX:
         # 取每个agent动作对应的Q值，并且把最后不需要的一维去掉，因为最后一维只有一个值了
         q_evals = torch.gather(q_evals, dim=3, index=u).squeeze(3)
 
-        # 得到真正的target_q
-        # 传入的avail_u_next参数和q_targets维度一样，这样每个都对应起来，只要为0，就证明在该episode中，该transition上该agent不能执行该动作
+        # 得到target_q
         q_targets[avail_u_next == 0.0] = - 9999999
         q_targets = q_targets.max(dim=3)[0]
 
@@ -100,6 +102,7 @@ class QMIX:
         loss = (masked_td_error ** 2).sum() / mask.sum()
         self.optimizer.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.eval_parameters, self.args.grad_norm_clip)
         self.optimizer.step()
 
         if train_step > 0 and train_step % self.args.target_update_cycle == 0:
@@ -161,8 +164,8 @@ class QMIX:
 
     def init_hidden(self, episode_num):
         # 为每个episode中的每个agent都初始化一个eval_hidden、target_hidden
-        self.eval_hidden = self.eval_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
-        self.target_hidden = self.target_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
+        self.eval_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
+        self.target_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
 
     def save_model(self, train_step):
         num = str(train_step // self.args.save_cycle)

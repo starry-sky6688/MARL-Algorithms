@@ -39,14 +39,17 @@ class QtranBase:
 
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
-        # if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
-        #     path_rnn = self.model_dir + '/rnn_net_params.pkl'
-        #     path_joint_q = self.model_dir + '/joint_q_params.pkl'
-        #     path_v = self.model_dir + '/v_params.pkl'
-        #     self.eval_rnn.load_state_dict(torch.load(path_rnn))
-        #     self.eval_joint_q.load_state_dict(torch.load(path_joint_q))
-        #     self.v.load_state_dict(torch.load(path_v))
-        #     print('Successfully load the model: {}, {} and {}'.format(path_rnn, path_joint_q, path_v))
+        if self.args.load_model:
+            if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
+                path_rnn = self.model_dir + '/rnn_net_params.pkl'
+                path_joint_q = self.model_dir + '/joint_q_params.pkl'
+                path_v = self.model_dir + '/v_params.pkl'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn))
+                self.eval_joint_q.load_state_dict(torch.load(path_joint_q))
+                self.v.load_state_dict(torch.load(path_v))
+                print('Successfully load the model: {}, {} and {}'.format(path_rnn, path_joint_q, path_v))
+            else:
+                raise Exception("No model!")
 
         # 让target_net和eval_net的网络参数相同
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
@@ -142,7 +145,7 @@ class QtranBase:
         # loss = l_td + self.args.lambda_opt * l_opt
         self.optimizer.zero_grad()
         loss.backward()
-        grad_norm = nn.utils.clip_grad_norm_(self.eval_parameters, self.args.grad_norm_clip)
+        torch.nn.utils.clip_grad_norm_(self.eval_parameters, self.args.grad_norm_clip)
         self.optimizer.step()
 
         if train_step > 0 and train_step % self.args.target_update_cycle == 0:
@@ -245,8 +248,8 @@ class QtranBase:
 
     def init_hidden(self, episode_num):
         # 为每个episode中的每个agent都初始化一个eval_hidden、target_hidden
-        self.eval_hidden = self.eval_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
-        self.target_hidden = self.target_rnn.init_hidden().unsqueeze(0).expand(episode_num, self.n_agents, -1)
+        self.eval_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
+        self.target_hidden = torch.zeros((episode_num, self.n_agents, self.args.rnn_hidden_dim))
 
     def save_model(self, train_step):
         num = str(train_step // self.args.save_cycle)

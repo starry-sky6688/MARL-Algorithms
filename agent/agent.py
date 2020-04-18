@@ -53,7 +53,7 @@ class Agents:
             inputs = inputs.cuda()
             hidden_state = hidden_state.cuda()
         q_value, self.policy.eval_hidden[:, agent_num, :] = self.policy.eval_rnn.forward(inputs, hidden_state)
-        if self.args.alg == 'coma' or self.args.alg == 'crntral_v' or self.args.alg == 'reinforce':
+        if self.args.alg == 'coma' or self.args.alg == 'central_v' or self.args.alg == 'reinforce':
             action = self._choose_action_from_softmax(q_value.cpu(), avail_actions, epsilon, evaluate)
         else:
             q_value[avail_actions == 0.0] = - float("inf")  # 传入的avail_actions参数是一个array
