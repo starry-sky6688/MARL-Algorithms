@@ -45,7 +45,7 @@ Directly run the `main.py`, then the algorithm will start **training** on map `3
 
 If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. **Note** we trained these models on GPU, if you don't have CUDA, you need to train the model first.
 
-The running of DyMA-CL is independent from others because it requires different environment settings, so we put it on another project. For more details, please read [DyMA-CL documentation](https://github.com/starry-sky6688/DyMA-CL/blob/master).
+The running of DyMA-CL is independent from others because it requires different environment settings, so we put it on another project. For more details, please read [DyMA-CL documentation](https://github.com/starry-sky6688/DyMA-CL).
 
 ## Result
 
