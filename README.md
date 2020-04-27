@@ -41,7 +41,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 $ python main.py --map=3m --alg=qmix
 ```
 
-Directly run the `main.py`, then the algorithm will start **training** on map `3m`， and the difficulty is **7(VeryHard)**. **Note** CommNet and G2ANet need a external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
+Directly run the `main.py`, then the algorithm will start **training** on map `3m`， and the difficulty is **7(VeryHard)**. **Note** CommNet and G2ANet need an external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
 
 If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. **Note** we trained these models on GPU, if you don't have CUDA, you need to train the model first.
 
@@ -49,8 +49,11 @@ The running of DyMA-CL is independent from others because it requires different 
 
 ## Result
 
-We independently train these algorithms for 8 times and take the mean of the 8 independent results. We train these algorithms for 20000 episodes and evaluate them for every 100 episodes. All of the results are saved in  `./result`.
-Result on other maps are still in training, we will update them later.
+We independently train these algorithms for 8 times and take the mean of the 8 independent results, and we evaluate them for 20 episodes every 100 training steps. All of the results are saved in  `./result`.
+Results on other maps are still in training, we will update them later.
 
 ### 1. Mean Win Rate of 8 Independent Runs on `3m --difficulty=7(VeryHard)`
-<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview.png"/></div>
+<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview_3m.png"/></div>
+
+### 2. Mean Win Rate of 8 Independent Runs on `2s3z --difficulty=7(VeryHard)`
+<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview_2s3z.png"/></div>

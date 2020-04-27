@@ -10,6 +10,7 @@ from policy.qtran_base import QtranBase
 from torch.distributions import Categorical
 
 
+# Agent no communication
 class Agents:
     def __init__(self, args):
         self.n_actions = args.n_actions
@@ -105,6 +106,7 @@ class Agents:
             self.policy.save_model(train_step)
 
 
+# Agent for communication
 class CommAgents:
     def __init__(self, args):
         self.n_actions = args.n_actions

@@ -46,9 +46,9 @@ def plt_win_rate_mean():
     plt.plot(range(len(win_rates[5])), win_rates[5], c='#FFA500', label='reinforce+commnet')
     plt.plot(range(len(win_rates[6])), win_rates[6], c='m', label='reinforce+g2anet')
     plt.legend()
-    plt.xlabel('epoch * 100')
+    plt.xlabel('episodes * 100')
     plt.ylabel('win_rate')
-    plt.savefig('../result/overview.png')
+    plt.savefig('../result/overview_3m.png')
     plt.show()
 
 

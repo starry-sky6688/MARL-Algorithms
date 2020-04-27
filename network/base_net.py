@@ -28,6 +28,7 @@ class RNN(nn.Module):
         return q, h
 
 
+# Critic of Central-V
 class Critic(nn.Module):
     def __init__(self, input_shape, args):
         super(Critic, self).__init__()
