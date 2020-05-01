@@ -53,4 +53,45 @@ We independently train these algorithms for 8 times and take the mean of the 8 i
 Result on other maps are still in training, we will update them later.
 
 ### 1. Mean Win Rate of 8 Independent Runs on `3m --difficulty=7(VeryHard)`
-<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview.png"/></div>
+<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview_3m.png"/></div>
+
+
+## The problems that should be solved
+
+After running that command
+
+```shell
+$ python main.py --map=3m --alg=qmix
+```
+AssertionError: Torch not compiled with CUDA enabled
+
+It is fixed by modifying ***common/arguments.py*** file to set the CUDA params by default to ***False***
+
+```shell
+$ parser.add_argument('--cuda', type=bool, default=False, help='whether to use the GPU')
+```
+
+
+The next problem is that after running 
+
+```shell
+$ python main.py --map=3m --alg=qmix
+```
+Init alg VDN
+
+To solve that problem we need to modify ***main.py***
+
+Just comment the lines 10-12
+
+```shell script
+# args.alg = 'vdn'
+# args.map = '3m'
+```
+
+## TODO List
+
+- [x] Resolve Problem with CUDA
+- [x] Resolve Problem with Algorithm selection
+- [ ] Make progress to identify result of QMIX
+- [ ] Same with VDN
+- [ ] Update results on our maps
