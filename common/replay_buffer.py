@@ -28,11 +28,8 @@ class ReplayBuffer:
                         'padded': np.empty([self.size, self.episode_limit, 1]),
                         'terminated': np.empty([self.size, self.episode_limit, 1])
                         }
-        '''
-        (o[n], u[n], r[n], o_next[n], avail_u[n], u_onehot[n])组成第n条经验
-        padded: 当前经验是否用0来填充，因为不同的episode长度不一样，buffer长度是固定的，所以对于长度不够的episode，
-                其所有数据都用0来填充；episode长度不可能超过buffer长度，因为执行的时候达到最大长度就停止了。
-        '''
+        if self.args.alg == 'maven':
+            self.buffers['z'] = np.empty([self.size, self.args.noise_dim])
         # thread lock
         self.lock = threading.Lock()
 
@@ -53,6 +50,8 @@ class ReplayBuffer:
             self.buffers['u_onehot'][idxs] = episode_batch['u_onehot']
             self.buffers['padded'][idxs] = episode_batch['padded']
             self.buffers['terminated'][idxs] = episode_batch['terminated']
+            if self.args.alg == 'maven':
+                self.buffers['z'][idxs] = episode_batch['z']
 
     def sample(self, batch_size):
         temp_buffer = {}

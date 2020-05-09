@@ -57,12 +57,12 @@ class Runner:
                 plt.cla()
                 plt.subplot(2, 1, 1)
                 plt.plot(range(len(win_rates)), win_rates)
-                plt.xlabel('epoch')
+                plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
                 plt.ylabel('win_rate')
 
                 plt.subplot(2, 1, 2)
                 plt.plot(range(len(episode_rewards)), episode_rewards)
-                plt.xlabel('epoch')
+                plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
                 plt.ylabel('episode_rewards')
 
                 plt.savefig(self.save_path + '/plt_{}.png'.format(num), format='png')
@@ -95,12 +95,12 @@ class Runner:
         plt.cla()
         plt.subplot(2, 1, 1)
         plt.plot(range(len(win_rates)), win_rates)
-        plt.xlabel('epoch')
+        plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
         plt.ylabel('win_rate')
 
         plt.subplot(2, 1, 2)
         plt.plot(range(len(episode_rewards)), episode_rewards)
-        plt.xlabel('epoch')
+        plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
         plt.ylabel('episode_rewards')
 
         plt.savefig(self.save_path + '/plt_{}.png'.format(num), format='png')

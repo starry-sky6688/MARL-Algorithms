@@ -5,10 +5,7 @@ from common.arguments import get_common_args, get_coma_args, get_mixer_args, get
 
 if __name__ == '__main__':
     for i in range(8):
-
         args = get_common_args()
-        args.alg = 'vdn'
-        args.map = '3m'
         if args.alg.find('coma') > -1:
             args = get_coma_args(args)
         elif args.alg.find('central_v') > -1:

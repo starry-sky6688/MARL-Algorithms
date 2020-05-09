@@ -17,19 +17,19 @@ def get_common_args():
     parser.add_argument('--replay_dir', type=str, default='', help='the directory of save the replay')
     # The alternative algorithms are vdn, coma, central_v, qmix, qtran_base,
     # qtran_alt, reinforce, coma+commnet, central_v+commnet, reinforce+commnet，
-    # coma+g2anet, central_v+g2anet, reinforce+g2anet
+    # coma+g2anet, central_v+g2anet, reinforce+g2anet, maven
     parser.add_argument('--alg', type=str, default='qmix', help='the algorithm to train the agent')
     parser.add_argument('--last_action', type=bool, default=True, help='whether to use the last action to choose action')
     parser.add_argument('--reuse_network', type=bool, default=True, help='whether to use one network for all agents')
-    parser.add_argument('--gamma', type=float, default=0.99, help='the discount factor')
-    parser.add_argument('--optimizer', type=str, default="RMS", help='the optimizer')
-    parser.add_argument('--evaluate_epoch', type=int, default=20, help='the number of the epoch to evaluate the agent')
-    parser.add_argument('--model_dir', type=str, default='./model', help='the model directory of the policy')
-    parser.add_argument('--result_dir', type=str, default='./result', help='the result directory of the policy')
+    parser.add_argument('--gamma', type=float, default=0.99, help='discount factor')
+    parser.add_argument('--optimizer', type=str, default="RMS", help='optimizer')
+    parser.add_argument('--evaluate_epoch', type=int, default=20, help='number of the epoch to evaluate the agent')
+    parser.add_argument('--model_dir', type=str, default='./model', help='model directory of the policy')
+    parser.add_argument('--result_dir', type=str, default='./result', help='result directory of the policy')
     parser.add_argument('--load_model', type=bool, default=False, help='whether to load the pretrained model')
     parser.add_argument('--learn', type=bool, default=True, help='whether to train the model')
-    parser.add_argument('--cuda', type=bool, default=True, help='whether to use the GPU')
-    parser.add_argument('--threshold', type=float, default=19.9, help='the threshold to judge whether win')
+    parser.add_argument('--cuda', type=bool, default=False, help='whether to use the GPU')
+    parser.add_argument('--threshold', type=float, default=19.9, help='threshold to judge whether win')
     args = parser.parse_args()
     return args
 
@@ -117,6 +117,12 @@ def get_mixer_args(args):
 
     # prevent gradient explosion
     args.grad_norm_clip = 10
+
+    # MAVEN
+    args.noise_dim = 16
+    args.lambda_mi = 0.001
+    args.lambda_ql = 1
+    args.entropy_coefficient = 0.001
     return args
 
 

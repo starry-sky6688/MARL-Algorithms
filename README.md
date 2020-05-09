@@ -1,6 +1,13 @@
 # StarCraft
 
-This is a pytorch implementation of the multi-agent reinforcement learning algorithms, including [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both **QTRAN-base** and **QTRAN-alt**), [CommNet](https://arxiv.org/abs/1605.07736), [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), which are the state of art MARL algorithms. In addition, because CommNet and G2ANet need a external training algorithm, you can combine them with COMA, we also provide **Central-V** and **REINFORCE** for them to training. We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
+Pytorch implementations of the multi-agent reinforcement learning algorithms, including 
+[QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), 
+[COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both **QTRAN-base** and **QTRAN-alt**),
+[MAVEN](https://arxiv.org/abs/1910.07483), [CommNet](https://arxiv.org/abs/1605.07736), 
+[DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), 
+which are the state of the art MARL algorithms. In addition, because CommNet and G2ANet need an external training algorithm, 
+you also combine them with COMA, we also provide **Central-V** and **REINFORCE** for them to training. 
+We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
 
 ## Corresponding Papers
 
@@ -11,6 +18,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 - [Learning Multiagent Communication with Backpropagation](https://arxiv.org/abs/1605.07736)
 - [From Few to More: Large-scale Dynamic Multiagent Curriculum Learning](https://arxiv.org/abs/1909.02790?context=cs.MA)
 - [Multi-Agent Game Abstraction via Graph Attention Neural Network](https://arxiv.org/abs/1911.10715)
+- [MAVEN: Multi-Agent Variational Exploration](https://arxiv.org/abs/1910.07483)
 
 ## Requirements
 
@@ -30,7 +38,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 - [x] Add CUDA option
 - [x] DyMA-CL
 - [x] G2ANet
-- [ ] MAVEN
+- [x] MAVEN
 - [ ] VBC
 - [ ] Other SOTA MARL algorithms
 - [ ] Update results on other maps
@@ -41,7 +49,7 @@ This is a pytorch implementation of the multi-agent reinforcement learning algor
 $ python main.py --map=3m --alg=qmix
 ```
 
-Directly run the `main.py`, then the algorithm will start **training** on map `3m`， and the difficulty is **7(VeryHard)**. **Note** CommNet and G2ANet need an external training algorithm, so the name of the algorithm is like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
+Directly run the `main.py`, then the algorithm will start **training** on map `3m`. **Note** CommNet and G2ANet need an external training algorithm, so the name of them are like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
 
 If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. **Note** we trained these models on GPU, if you don't have CUDA, you need to train the model first.
 

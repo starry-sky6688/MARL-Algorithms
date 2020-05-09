@@ -1,4 +1,6 @@
 import numpy as np
+import torch
+from torch.distributions import one_hot_categorical
 import time
 
 
@@ -23,15 +25,27 @@ class RolloutWorker:
         self.env.reset()
         terminated = False
         step = 0
-        episode_reward = 0
+        episode_reward = 0  # 累积奖励
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
         self.agents.policy.init_hidden(1)  # 初始化hidden_state
+
+        # epsilon
         epsilon = 0 if evaluate else self.epsilon
         if self.args.epsilon_anneal_scale == 'episode':
             epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         if self.args.epsilon_anneal_scale == 'epoch':
             if episode_num == 0:
                 epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+
+        # sample z for maven
+        if self.args.alg == 'maven':
+            state = self.env.get_state()
+            state = torch.tensor(state, dtype=torch.float32)
+            if self.args.cuda:
+                state = state.cuda()
+            z_prob = self.agents.policy.z_policy(state)
+            maven_z = one_hot_categorical.OneHotCategorical(z_prob).sample()
+            maven_z = list(maven_z.cpu())
         while not terminated:
             # time.sleep(0.2)
             obs = self.env.get_obs()
@@ -39,9 +53,12 @@ class RolloutWorker:
             actions, avail_actions, actions_onehot = [], [], []
             for agent_id in range(self.n_agents):
                 avail_action = self.env.get_avail_agent_actions(agent_id)
-
-                # 输入当前agent上一个时刻的动作
-                action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id, avail_action, epsilon, evaluate)
+                if self.args.alg == 'maven':
+                    action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
+                                                       avail_action, epsilon, maven_z, evaluate)
+                else:
+                    action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
+                                                       avail_action, epsilon, evaluate)
                 # 生成对应动作的0 1向量
                 action_onehot = np.zeros(self.args.n_actions)
                 action_onehot[action] = 1
@@ -116,14 +133,15 @@ class RolloutWorker:
                        padded=padded.copy(),
                        terminated=terminate.copy()
                        )
+        # 因为buffer里存的是四维的，这里得到的episode只有三维，即transition、agent、shape三个维度，
+        # 还差一个episode维度，所以给它加一维
         for key in episode.keys():
             episode[key] = np.array([episode[key]])
         if not evaluate:
             self.epsilon = epsilon
-            # print('Epsilon is ', self.epsilon)
+        if self.args.alg == 'maven':
+            episode['z'] = np.array([maven_z.copy()])
         return episode, episode_reward
-        # 因为buffer里存的是四维的，这里得到的episode只有三维，即transition、agent、shape三个维度，
-        # 还差一个episode维度，所以给它加一维
 
 
 class CommRolloutWorker:

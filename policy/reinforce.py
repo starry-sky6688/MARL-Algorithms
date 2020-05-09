@@ -99,9 +99,9 @@ class Reinforce:
         terminated = terminated.squeeze(-1)
         terminated = 1 - terminated
         n_return = torch.zeros_like(r)
-        n_return[:, -1] = r[:, -1] * terminated[:, -1] * mask[:, -1]
+        n_return[:, -1] = r[:, -1] * mask[:, -1]
         for transition_idx in range(max_episode_len - 2, -1, -1):
-            n_return[:, transition_idx] = (r[:, transition_idx] + self.args.gamma * n_return[:, transition_idx + 1] * terminated[:, transition_idx + 1]) * mask[:, transition_idx]
+            n_return[:, transition_idx] = (r[:, transition_idx] + self.args.gamma * n_return[:, transition_idx + 1] * terminated[:, transition_idx]) * mask[:, transition_idx]
         return n_return.unsqueeze(-1).expand(-1, -1, self.n_agents)
 
     def _get_actor_inputs(self, batch, transition_idx):
