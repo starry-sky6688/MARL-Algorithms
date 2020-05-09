@@ -6,7 +6,7 @@ Pytorch implementations of the multi-agent reinforcement learning algorithms, in
 [MAVEN](https://arxiv.org/abs/1910.07483), [CommNet](https://arxiv.org/abs/1605.07736), 
 [DyMA-CL](https://arxiv.org/abs/1909.02790?context=cs.MA), and [G2ANet](https://arxiv.org/abs/1911.10715), 
 which are the state of the art MARL algorithms. In addition, because CommNet and G2ANet need an external training algorithm, 
-you also combine them with COMA, we also provide **Central-V** and **REINFORCE** for them to training. 
+we provide **Central-V** and **REINFORCE** for them to training, you can also combine them with COMA.
 We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
 
 ## Corresponding Papers
