@@ -136,7 +136,6 @@ class VDN:
         # 因为这里所有agent共享一个神经网络，每条数据中带上了自己的编号，所以还是自己的数据
         inputs = torch.cat([x.reshape(episode_num * self.args.n_agents, -1) for x in inputs], dim=1)
         inputs_next = torch.cat([x.reshape(episode_num * self.args.n_agents, -1) for x in inputs_next], dim=1)
-        # TODO 检查inputs_next是不是相当于inputs向后移动一条
         return inputs, inputs_next
 
     def get_q_values(self, batch, max_episode_len):

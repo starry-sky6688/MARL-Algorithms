@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as f
 
 
-# 输入所有agent的obs，输出所有agent的动作
+# input obs of all agents，output probability distribution of all agents
 class CommNet(nn.Module):
     def __init__(self, input_shape, args):
         super(CommNet, self).__init__()

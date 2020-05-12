@@ -97,7 +97,6 @@ class QMIX:
         td_error = (q_total_eval - targets.detach())
         masked_td_error = mask * td_error  # 抹掉填充的经验的td_error
 
-        # loss = masked_td_error.pow(2).mean()
         # 不能直接用mean，因为还有许多经验是没用的，所以要求和再比真实的经验数，才是真正的均值
         loss = (masked_td_error ** 2).sum() / mask.sum()
         self.optimizer.zero_grad()
@@ -135,7 +134,6 @@ class QMIX:
         # 因为这里所有agent共享一个神经网络，每条数据中带上了自己的编号，所以还是自己的数据
         inputs = torch.cat([x.reshape(episode_num * self.args.n_agents, -1) for x in inputs], dim=1)
         inputs_next = torch.cat([x.reshape(episode_num * self.args.n_agents, -1) for x in inputs_next], dim=1)
-        # TODO 检查inputs_next是不是相当于inputs向后移动一条
         return inputs, inputs_next
 
     def get_q_values(self, batch, max_episode_len):

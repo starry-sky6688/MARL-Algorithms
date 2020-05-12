@@ -4,7 +4,6 @@ import torch.nn.functional as F
 '''
 输入当前的状态、当前agent的obs、其他agent执行的动作、当前agent的编号对应的one-hot向量、所有agent上一个timestep执行的动作
 输出当前agent的所有可执行动作对应的联合Q值——一个n_actions维向量
-advantage在外面进行计算，不在这个coma_critic中，但是可以认为是coma_critic的一部分
 '''
 
 

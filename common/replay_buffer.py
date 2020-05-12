@@ -15,10 +15,9 @@ class ReplayBuffer:
         self.current_idx = 0
         self.current_size = 0
         # create the buffer to store info
-        # buffer各个维度的意义：1——第几个episode 2——episode中第几个transition 3——第几个agent的数据 4——具体obs维度
         self.buffers = {'o': np.empty([self.size, self.episode_limit, self.n_agents, self.obs_shape]),
                         'u': np.empty([self.size, self.episode_limit, self.n_agents, 1]),
-                        's': np.empty([self.size, self.episode_limit, self.state_shape]),  # state是对于全局而言的，不分agent
+                        's': np.empty([self.size, self.episode_limit, self.state_shape]),
                         'r': np.empty([self.size, self.episode_limit, 1]),
                         'o_next': np.empty([self.size, self.episode_limit, self.n_agents, self.obs_shape]),
                         's_next': np.empty([self.size, self.episode_limit, self.state_shape]),
@@ -35,7 +34,7 @@ class ReplayBuffer:
 
         # store the episode
     def store_episode(self, episode_batch):
-        batch_size = episode_batch['o'].shape[0]  # 得到episode_batch里有多少个episode
+        batch_size = episode_batch['o'].shape[0]  # episode_number
         with self.lock:
             idxs = self._get_storage_idx(inc=batch_size)
             # store the informations
@@ -61,7 +60,6 @@ class ReplayBuffer:
         return temp_buffer
 
     def _get_storage_idx(self, inc=None):
-        # buffer里存最新的self.size个经验
         inc = inc or 1
         if self.current_idx + inc <= self.size:
             idx = np.arange(self.current_idx, self.current_idx + inc)

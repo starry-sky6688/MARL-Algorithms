@@ -30,15 +30,14 @@ def store_args(method):
     return wrapper
 
 
-def td_lambda_target(batch, max_episode_len, q_targets, args):  # 用来通过TD(lambda)计算y
-    # batch维度为(episode个数, max_episode_len， n_agents，n_actions)
-    # q_targets维度为(episode个数, max_episode_len， n_agents)
+def td_lambda_target(batch, max_episode_len, q_targets, args):
+    # batch.shep = (episode_num, max_episode_len， n_agents，n_actions)
+    # q_targets.shape = (episode_num, max_episode_len， n_agents)
     episode_num = batch['o'].shape[0]
-    mask = (1 - batch["padded"].float()).repeat(1, 1, args.n_agents)  # 用来把那些填充的经验的TD-error置0，从而不让它们影响到学习
-    terminated = (1 - batch["terminated"].float()).repeat(1, 1, args.n_agents)  # 用来把episode最后一条经验中的q_target置0
-    # 把reward维度从(episode个数, max_episode_len, 1)变成(episode个数, max_episode_len, n_agents)
+    mask = (1 - batch["padded"].float()).repeat(1, 1, args.n_agents)
+    terminated = (1 - batch["terminated"].float()).repeat(1, 1, args.n_agents)
     r = batch['r'].repeat((1, 1, args.n_agents))
-    # 计算n_step_return
+    # --------------------------------------------------n_step_return---------------------------------------------------
     '''
     1. 每条经验都有若干个n_step_return，所以给一个最大的max_episode_len维度用来装n_step_return
     最后一维,第n个数代表 n+1 step。
@@ -56,9 +55,11 @@ def td_lambda_target(batch, max_episode_len, q_targets, args):  # 用来通过TD
             # t时刻的n step return =r + gamma * (t + 1 时刻的 n-1 step return)
             # n=1除外, 1 step return =r + gamma * (t + 1 时刻的 Q)
             n_step_return[:, transition_idx, :, n] = (r[:, transition_idx] + args.gamma * n_step_return[:, transition_idx + 1, :, n - 1]) * mask[:, transition_idx]
-        # 计算lambda return
+    # --------------------------------------------------n_step_return---------------------------------------------------
+
+    # --------------------------------------------------lambda return---------------------------------------------------
     '''
-    lambda_return 维度为(episode个数, max_episode_len， n_agents)，每条经验中，每个agent都有一个lambda return
+    lambda_return.shape = (episode_num, max_episode_len，n_agents)
     '''
     lambda_return = torch.zeros((episode_num, max_episode_len, args.n_agents))
     for transition_idx in range(max_episode_len):
@@ -68,4 +69,5 @@ def td_lambda_target(batch, max_episode_len, q_targets, args):  # 用来通过TD
         lambda_return[:, transition_idx] = (1 - args.td_lambda) * returns + \
                                            pow(args.td_lambda, max_episode_len - transition_idx - 1) * \
                                            n_step_return[:, transition_idx, :, max_episode_len - transition_idx - 1]
+    # --------------------------------------------------lambda return---------------------------------------------------
     return lambda_return

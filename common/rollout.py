@@ -25,9 +25,9 @@ class RolloutWorker:
         self.env.reset()
         terminated = False
         step = 0
-        episode_reward = 0  # 累积奖励
+        episode_reward = 0  # cumulative rewards
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
-        self.agents.policy.init_hidden(1)  # 初始化hidden_state
+        self.agents.policy.init_hidden(1)
 
         # epsilon
         epsilon = 0 if evaluate else self.epsilon
@@ -59,7 +59,7 @@ class RolloutWorker:
                 else:
                     action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
                                                        avail_action, epsilon, evaluate)
-                # 生成对应动作的0 1向量
+                # generate onehot vector of th action
                 action_onehot = np.zeros(self.args.n_actions)
                 action_onehot[action] = 1
                 actions.append(action)
@@ -73,8 +73,6 @@ class RolloutWorker:
 
             o.append(obs)
             s.append(state)
-            # 和环境交互的actions需要是一个list，里面就装着代表每个agent动作的整数
-            # buffer里存的action，每个agent的动作都需要是一个1维向量
             u.append(np.reshape(actions, [self.n_agents, 1]))
             u_onehot.append(actions_onehot)
             avail_u.append(avail_actions)
@@ -87,14 +85,14 @@ class RolloutWorker:
             #     time.sleep(1)
             if self.args.epsilon_anneal_scale == 'step':
                 epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
-        # 处理最后一个obs
+        # last obs
         o.append(obs)
         s.append(state)
         o_next = o[1:]
         s_next = s[1:]
         o = o[:-1]
         s = s[:-1]
-        # 最后一个obs需要单独计算一下avail_action，到时候需要计算target_q
+        # get avail_action for last obs，because target_q needs avail_action in training
         avail_actions = []
         for agent_id in range(self.n_agents):
             avail_action = self.env.get_avail_agent_actions(agent_id)
@@ -103,8 +101,8 @@ class RolloutWorker:
         avail_u_next = avail_u[1:]
         avail_u = avail_u[:-1]
 
-        # 返回的episode必须长度都是self.episode_limit，所以不够的话进行填充
-        for i in range(step, self.episode_limit):  # 没有的字段用0填充，并且padded为1
+        # if step < self.episode_limit，padding
+        for i in range(step, self.episode_limit):
             o.append(np.zeros((self.n_agents, self.obs_shape)))
             u.append(np.zeros([self.n_agents, 1]))
             s.append(np.zeros(self.state_shape))
@@ -117,10 +115,6 @@ class RolloutWorker:
             padded.append([1.])
             terminate.append([1.])
 
-        '''
-        (o[n], u[n], r[n], o_next[n], avail_u[n], u_onehot[n])组成第n条经验，各项维度都为(episode数，transition数，n_agents, 自己的具体维度)
-         因为avail_u表示当前经验的obs可执行的动作，但是计算target_q的时候，需要obs_net及其可执行动作，
-        '''
         episode = dict(o=o.copy(),
                        s=s.copy(),
                        u=u.copy(),
@@ -133,8 +127,7 @@ class RolloutWorker:
                        padded=padded.copy(),
                        terminated=terminate.copy()
                        )
-        # 因为buffer里存的是四维的，这里得到的episode只有三维，即transition、agent、shape三个维度，
-        # 还差一个episode维度，所以给它加一维
+        # add episode dim
         for key in episode.keys():
             episode[key] = np.array([episode[key]])
         if not evaluate:
@@ -144,6 +137,7 @@ class RolloutWorker:
         return episode, episode_reward
 
 
+# RolloutWorker for communication
 class CommRolloutWorker:
     def __init__(self, env, agents, args):
         self.env = env
@@ -167,7 +161,7 @@ class CommRolloutWorker:
         step = 0
         episode_reward = 0
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
-        self.agents.policy.init_hidden(1)  # 初始化hidden_state
+        self.agents.policy.init_hidden(1)
         epsilon = 0 if evaluate else self.epsilon
         if self.args.epsilon_anneal_scale == 'episode':
             epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
@@ -180,12 +174,15 @@ class CommRolloutWorker:
             state = self.env.get_state()
             actions, avail_actions, actions_onehot = [], [], []
 
-            # 得到所有agent的各个动作的weights
+            # get the weights of all actions for all agents
             weights = self.agents.get_action_weights(np.array(obs), last_action)
+
+            # choose action for each agent
             for agent_id in range(self.n_agents):
                 avail_action = self.env.get_avail_agent_actions(agent_id)
                 action = self.agents.choose_action(weights[agent_id], avail_action, epsilon, evaluate)
-                # 生成对应动作的0 1向量
+
+                # generate onehot vector of th action
                 action_onehot = np.zeros(self.args.n_actions)
                 action_onehot[action] = 1
                 actions.append(action)
@@ -199,8 +196,6 @@ class CommRolloutWorker:
 
             o.append(obs)
             s.append(state)
-            # 和环境交互的actions需要是一个list，里面就装着代表每个agent动作的整数
-            # buffer里存的action，每个agent的动作都需要是一个1维向量
             u.append(np.reshape(actions, [self.n_agents, 1]))
             u_onehot.append(actions_onehot)
             avail_u.append(avail_actions)
@@ -213,14 +208,14 @@ class CommRolloutWorker:
             #     time.sleep(1)
             if self.args.epsilon_anneal_scale == 'step':
                 epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
-        # 处理最后一个obs
+        # last obs
         o.append(obs)
         s.append(state)
         o_next = o[1:]
         s_next = s[1:]
         o = o[:-1]
         s = s[:-1]
-        # 最后一个obs需要单独计算一下avail_action，到时候需要计算target_q
+        # get avail_action for last obs，because target_q needs avail_action in training
         avail_actions = []
         for agent_id in range(self.n_agents):
             avail_action = self.env.get_avail_agent_actions(agent_id)
@@ -229,8 +224,8 @@ class CommRolloutWorker:
         avail_u_next = avail_u[1:]
         avail_u = avail_u[:-1]
 
-        # 返回的episode必须长度都是self.episode_limit，所以不够的话进行填充
-        for i in range(step, self.episode_limit):  # 没有的字段用0填充，并且padded为1
+        # if step < self.episode_limit，padding
+        for i in range(step, self.episode_limit):
             o.append(np.zeros((self.n_agents, self.obs_shape)))
             u.append(np.zeros([self.n_agents, 1]))
             s.append(np.zeros(self.state_shape))
@@ -243,10 +238,6 @@ class CommRolloutWorker:
             padded.append([1.])
             terminate.append([1.])
 
-        '''
-        (o[n], u[n], r[n], o_next[n], avail_u[n], u_onehot[n])组成第n条经验，各项维度都为(episode数，transition数，n_agents, 自己的具体维度)
-         因为avail_u表示当前经验的obs可执行的动作，但是计算target_q的时候，需要obs_net及其可执行动作，
-        '''
         episode = dict(o=o.copy(),
                        s=s.copy(),
                        u=u.copy(),
@@ -259,11 +250,10 @@ class CommRolloutWorker:
                        padded=padded.copy(),
                        terminated=terminate.copy()
                        )
+        # add episode dim
         for key in episode.keys():
             episode[key] = np.array([episode[key]])
         if not evaluate:
             self.epsilon = epsilon
             # print('Epsilon is ', self.epsilon)
         return episode, episode_reward
-        # 因为buffer里存的是四维的，这里得到的episode只有三维，即transition、agent、shape三个维度，
-        # 还差一个episode维度，所以给它加一维

@@ -63,5 +63,9 @@ Results on other maps are still in training, we will update them later.
 ### 1. Mean Win Rate of 8 Independent Runs on `3m --difficulty=7(VeryHard)`
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview_3m.png"/></div>
 
-### 2. Mean Win Rate of 8 Independent Runs on `2s3z --difficulty=7(VeryHard)`
+### 2. Mean Win Rate of 8 Independent Runs on `8m --difficulty=7(VeryHard)`
+<div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview_8m.png"/></div>
+
+### 3. Mean Win Rate of 8 Independent Runs on `2s3z --difficulty=7(VeryHard)`
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview_2s3z.png"/></div>
+
