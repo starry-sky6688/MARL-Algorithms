@@ -14,7 +14,7 @@ def get_common_args():
     parser.add_argument('--map', type=str, default='3m', help='the map of the game')
     parser.add_argument('--seed', type=int, default=123, help='random seed')
     parser.add_argument('--step_mul', type=int, default=8, help='how many steps to make an action')
-    parser.add_argument('--replay_dir', type=str, default='', help='the directory of save the replay')
+    parser.add_argument('--replay_dir', type=str, default='', help='absolute path to save the replay')
     # The alternative algorithms are vdn, coma, central_v, qmix, qtran_base,
     # qtran_alt, reinforce, coma+commnet, central_v+commnet, reinforce+commnet，
     # coma+g2anet, central_v+g2anet, reinforce+g2anet, maven

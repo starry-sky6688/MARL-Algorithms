@@ -12,24 +12,12 @@ class Runner:
     def __init__(self, env, args):
         self.env = env
 
-        # 用来在一个稀疏奖赏的环境上评估算法的好坏，胜利为1，失败为-1，其他普通的一步为0
-        self.env_evaluate = StarCraft2Env(map_name=args.map,
-                                          step_mul=args.step_mul,
-                                          difficulty=args.difficulty,
-                                          game_version=args.game_version,
-                                          seed=args.seed,
-                                          replay_dir=args.replay_dir,
-                                          reward_sparse=True,
-                                          reward_scale=False)
-
         if args.alg.find('commnet') > -1 or args.alg.find('g2anet') > -1:  # communication agent
             self.agents = CommAgents(args)
             self.rolloutWorker = CommRolloutWorker(env, self.agents, args)
-            self.evaluateWorker = CommRolloutWorker(self.env_evaluate, self.agents, args)
         else:  # no communication agent
             self.agents = Agents(args)
             self.rolloutWorker = RolloutWorker(env, self.agents, args)
-            self.evaluateWorker = RolloutWorker(self.env_evaluate, self.agents, args)
         if args.alg.find('coma') == -1 and args.alg.find('central_v') == -1 and args.alg.find('reinforce') == -1:  # these 3 algorithms are on-poliy
             self.buffer = ReplayBuffer(args)
         self.args = args
@@ -72,7 +60,7 @@ class Runner:
             episodes = []
             # 收集self.args.n_episodes个episodes
             for episode_idx in range(self.args.n_episodes):
-                episode, _ = self.rolloutWorker.generate_episode(episode_idx)
+                episode, _, _ = self.rolloutWorker.generate_episode(episode_idx)
                 episodes.append(episode)
                 # print(_)
             # episode的每一项都是一个(1, episode_len, n_agents, 具体维度)四维数组，下面要把所有episode的的obs拼在一起
@@ -111,22 +99,11 @@ class Runner:
         win_number = 0
         episode_rewards = 0
         for epoch in range(self.args.evaluate_epoch):
-            _, episode_reward = self.rolloutWorker.generate_episode(evaluate=True)
+            _, episode_reward, win_tag = self.rolloutWorker.generate_episode(epoch, evaluate=True)
             episode_rewards += episode_reward
-            if episode_reward > self.args.threshold:
+            if win_tag:
                 win_number += 1
         return win_number / self.args.evaluate_epoch, episode_rewards / self.args.evaluate_epoch
-
-    def evaluate_sparse(self):
-        win_number = 0
-        for epoch in range(self.args.evaluate_epoch):
-            _, episode_reward = self.evaluateWorker.generate_episode(evaluate=True)
-            result = 'win' if episode_reward > 0 else 'defeat'
-            print('Epoch {}: {}'.format(epoch, result))
-            if episode_reward > 0:
-                win_number += 1
-        self.env_evaluate.close()
-        return win_number / self.args.evaluate_epoch
 
 
 

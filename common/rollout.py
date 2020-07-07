@@ -21,9 +21,12 @@ class RolloutWorker:
         print('Init RolloutWorker')
 
     def generate_episode(self, episode_num=None, evaluate=False):
+        if self.args.replay_dir != '' and evaluate and episode_num == 0:  # prepare for save replay of evaluation
+            self.env.close()
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
         self.env.reset()
         terminated = False
+        win_tag = False
         step = 0
         episode_reward = 0  # cumulative rewards
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
@@ -46,7 +49,8 @@ class RolloutWorker:
             z_prob = self.agents.policy.z_policy(state)
             maven_z = one_hot_categorical.OneHotCategorical(z_prob).sample()
             maven_z = list(maven_z.cpu())
-        while not terminated:
+
+        while not terminated and step < self.episode_limit:
             # time.sleep(0.2)
             obs = self.env.get_obs()
             state = self.env.get_state()
@@ -67,10 +71,8 @@ class RolloutWorker:
                 avail_actions.append(avail_action)
                 last_action[agent_id] = action_onehot
 
-            reward, terminated, _ = self.env.step(actions)
-            if step == self.episode_limit - 1:
-                terminated = 1
-
+            reward, terminated, info = self.env.step(actions)
+            win_tag = True if terminated and info['battle_won'] else False
             o.append(obs)
             s.append(state)
             u.append(np.reshape(actions, [self.n_agents, 1]))
@@ -81,8 +83,6 @@ class RolloutWorker:
             padded.append([0.])
             episode_reward += reward
             step += 1
-            # if terminated:
-            #     time.sleep(1)
             if self.args.epsilon_anneal_scale == 'step':
                 epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         # last obs
@@ -134,7 +134,10 @@ class RolloutWorker:
             self.epsilon = epsilon
         if self.args.alg == 'maven':
             episode['z'] = np.array([maven_z.copy()])
-        return episode, episode_reward
+        if evaluate and episode_num == self.args.evaluate_epoch - 1 and self.args.replay_dir != '':
+            self.env.save_replay()
+            self.env.close()
+        return episode, episode_reward, win_tag
 
 
 # RolloutWorker for communication
@@ -155,9 +158,12 @@ class CommRolloutWorker:
         print('Init CommRolloutWorker')
 
     def generate_episode(self, episode_num=None, evaluate=False):
+        if self.args.replay_dir != '' and evaluate and episode_num == 0:  # prepare for save replay
+            self.env.close()
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
         self.env.reset()
         terminated = False
+        win_tag = False
         step = 0
         episode_reward = 0
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
@@ -168,7 +174,7 @@ class CommRolloutWorker:
         if self.args.epsilon_anneal_scale == 'epoch':
             if episode_num == 0:
                 epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
-        while not terminated:
+        while not terminated and step < self.episode_limit:
             # time.sleep(0.2)
             obs = self.env.get_obs()
             state = self.env.get_state()
@@ -190,10 +196,8 @@ class CommRolloutWorker:
                 avail_actions.append(avail_action)
                 last_action[agent_id] = action_onehot
 
-            reward, terminated, _ = self.env.step(actions)
-            if step == self.episode_limit - 1:
-                terminated = 1
-
+            reward, terminated, info = self.env.step(actions)
+            win_tag = True if terminated and info['battle_won'] else False
             o.append(obs)
             s.append(state)
             u.append(np.reshape(actions, [self.n_agents, 1]))
@@ -256,4 +260,7 @@ class CommRolloutWorker:
         if not evaluate:
             self.epsilon = epsilon
             # print('Epsilon is ', self.epsilon)
-        return episode, episode_reward
+        if evaluate and episode_num == self.args.evaluate_epoch - 1 and self.args.replay_dir != '':
+            self.env.save_replay()
+            self.env.close()
+        return episode, episode_reward, win_tag

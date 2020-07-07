@@ -33,7 +33,7 @@ if __name__ == '__main__':
         if args.learn:
             runner.run(i)
         else:
-            win_rate = runner.evaluate_sparse()
+            win_rate, _ = runner.evaluate()
             print('The win rate of {} is  {}'.format(args.alg, win_rate))
             break
         env.close()
