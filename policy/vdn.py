@@ -35,8 +35,9 @@ class VDN:
             if os.path.exists(self.model_dir + '/rnn_net_params.pkl'):
                 path_rnn = self.model_dir + '/rnn_net_params.pkl'
                 path_vdn = self.model_dir + '/vdn_net_params.pkl'
-                self.eval_rnn.load_state_dict(torch.load(path_rnn))
-                self.eval_vdn_net.load_state_dict(torch.load(path_vdn))
+                map_location = 'cuda:0' if self.args.cuda else 'cpu'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn, map_location=map_location))
+                self.eval_vdn_net.load_state_dict(torch.load(path_vdn, map_location=map_location))
                 print('Successfully load the model: {} and {}'.format(path_rnn, path_vdn))
             else:
                 raise Exception("No model!")

@@ -29,7 +29,6 @@ def get_common_args():
     parser.add_argument('--load_model', type=bool, default=False, help='whether to load the pretrained model')
     parser.add_argument('--learn', type=bool, default=True, help='whether to train the model')
     parser.add_argument('--cuda', type=bool, default=False, help='whether to use the GPU')
-    parser.add_argument('--threshold', type=float, default=19.9, help='threshold to judge whether win')
     args = parser.parse_args()
     return args
 

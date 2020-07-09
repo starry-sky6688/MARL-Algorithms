@@ -4,8 +4,6 @@ from common.rollout import RolloutWorker, CommRolloutWorker
 from agent.agent import Agents, CommAgents
 from common.replay_buffer import ReplayBuffer
 import matplotlib.pyplot as plt
-# from tqdm import tqdm
-from smac.env import StarCraft2Env
 
 
 class Runner:
@@ -18,9 +16,11 @@ class Runner:
         else:  # no communication agent
             self.agents = Agents(args)
             self.rolloutWorker = RolloutWorker(env, self.agents, args)
-        if args.alg.find('coma') == -1 and args.alg.find('central_v') == -1 and args.alg.find('reinforce') == -1:  # these 3 algorithms are on-poliy
+        if args.learn and args.alg.find('coma') == -1 and args.alg.find('central_v') == -1 and args.alg.find('reinforce') == -1:  # these 3 algorithms are on-poliy
             self.buffer = ReplayBuffer(args)
         self.args = args
+        self.win_rates = []
+        self.episode_rewards = []
 
         # 用来保存plt和pkl
         self.save_path = self.args.result_dir + '/' + args.alg + '/' + args.map
@@ -28,34 +28,16 @@ class Runner:
             os.makedirs(self.save_path)
 
     def run(self, num):
-        plt.figure()
-        plt.axis([0, self.args.n_epoch, 0, 100])
-        win_rates = []
-        episode_rewards = []
         train_steps = 0
         # print('Run {} start'.format(num))
         for epoch in range(self.args.n_epoch):
             print('Run {}, train epoch {}'.format(num, epoch))
-
             if epoch % self.args.evaluate_cycle == 0:
                 win_rate, episode_reward = self.evaluate()
                 # print('win_rate is ', win_rate)
-                win_rates.append(win_rate)
-                episode_rewards.append(episode_reward)
-                plt.cla()
-                plt.subplot(2, 1, 1)
-                plt.plot(range(len(win_rates)), win_rates)
-                plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
-                plt.ylabel('win_rate')
-
-                plt.subplot(2, 1, 2)
-                plt.plot(range(len(episode_rewards)), episode_rewards)
-                plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
-                plt.ylabel('episode_rewards')
-
-                plt.savefig(self.save_path + '/plt_{}.png'.format(num), format='png')
-                np.save(self.save_path + '/win_rates_{}'.format(num), win_rates)
-                np.save(self.save_path + '/episode_rewards_{}'.format(num), episode_rewards)
+                self.win_rates.append(win_rate)
+                self.episode_rewards.append(episode_reward)
+                self.plt(num)
 
             episodes = []
             # 收集self.args.n_episodes个episodes
@@ -78,22 +60,7 @@ class Runner:
                     mini_batch = self.buffer.sample(min(self.buffer.current_size, self.args.batch_size))
                     self.agents.train(mini_batch, train_steps)
                     train_steps += 1
-
-
-        plt.cla()
-        plt.subplot(2, 1, 1)
-        plt.plot(range(len(win_rates)), win_rates)
-        plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
-        plt.ylabel('win_rate')
-
-        plt.subplot(2, 1, 2)
-        plt.plot(range(len(episode_rewards)), episode_rewards)
-        plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
-        plt.ylabel('episode_rewards')
-
-        plt.savefig(self.save_path + '/plt_{}.png'.format(num), format='png')
-        np.save(self.save_path + '/win_rates_{}'.format(num), win_rates)
-        np.save(self.save_path + '/episode_rewards_{}'.format(num), episode_rewards)
+        self.plt(num)
 
     def evaluate(self):
         win_number = 0
@@ -104,6 +71,25 @@ class Runner:
             if win_tag:
                 win_number += 1
         return win_number / self.args.evaluate_epoch, episode_rewards / self.args.evaluate_epoch
+
+    def plt(self, num):
+        plt.figure()
+        plt.axis([0, self.args.n_epoch, 0, 100])
+        plt.cla()
+        plt.subplot(2, 1, 1)
+        plt.plot(range(len(self.win_rates)), self.win_rates)
+        plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
+        plt.ylabel('win_rate')
+
+        plt.subplot(2, 1, 2)
+        plt.plot(range(len(self.episode_rewards)), self.episode_rewards)
+        plt.xlabel('epoch*{}'.format(self.args.evaluate_cycle))
+        plt.ylabel('episode_rewards')
+
+        plt.savefig(self.save_path + '/plt_{}.png'.format(num), format='png')
+        np.save(self.save_path + '/win_rates_{}'.format(num), self.win_rates)
+        np.save(self.save_path + '/episode_rewards_{}'.format(num), self.episode_rewards)
+
 
 
 

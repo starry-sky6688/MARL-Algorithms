@@ -41,7 +41,8 @@ class Reinforce:
         if self.args.load_model:
             if os.path.exists(self.model_dir + '/rnn_params.pkl'):
                 path_rnn = self.model_dir + '/rnn_params.pkl'
-                self.eval_rnn.load_state_dict(torch.load(path_rnn))
+                map_location = 'cuda:0' if self.args.cuda else 'cpu'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn, map_location=map_location))
                 print('Successfully load the model: {}'.format(path_rnn))
             else:
                 raise Exception("No model!")

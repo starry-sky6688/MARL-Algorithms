@@ -41,9 +41,10 @@ class QtranAlt:
                 path_rnn = self.model_dir + '/rnn_net_params.pkl'
                 path_joint_q = self.model_dir + '/joint_q_params.pkl'
                 path_v = self.model_dir + '/v_params.pkl'
-                self.eval_rnn.load_state_dict(torch.load(path_rnn))
-                self.eval_joint_q.load_state_dict(torch.load(path_joint_q))
-                self.v.load_state_dict(torch.load(path_v))
+                map_location = 'cuda:0' if self.args.cuda else 'cpu'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn, map_location=map_location))
+                self.eval_joint_q.load_state_dict(torch.load(path_joint_q, map_location=map_location))
+                self.v.load_state_dict(torch.load(path_v, map_location=map_location))
                 print('Successfully load the model: {}, {} and {}'.format(path_rnn, path_joint_q, path_v))
             else:
                 raise Exception("No model!")

@@ -48,8 +48,9 @@ class CentralV:
             if os.path.exists(self.model_dir + '/rnn_params.pkl'):
                 path_rnn = self.model_dir + '/rnn_params.pkl'
                 path_critic = self.model_dir + '/critic_params.pkl'
-                self.eval_rnn.load_state_dict(torch.load(path_rnn))
-                self.eval_critic.load_state_dict(torch.load(path_critic))
+                map_location = 'cuda:0' if self.args.cuda else 'cpu'
+                self.eval_rnn.load_state_dict(torch.load(path_rnn, map_location=map_location))
+                self.eval_critic.load_state_dict(torch.load(path_critic, map_location=map_location))
                 print('Successfully load the model: {} and {}'.format(path_rnn, path_critic))
             else:
                 raise Exception("No model!")

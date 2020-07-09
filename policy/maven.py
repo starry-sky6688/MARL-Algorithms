@@ -47,10 +47,11 @@ class MAVEN:
                 path_rnn = self.model_dir + '/rnn_net_params.pkl'
                 path_qmix = self.model_dir + '/qmix_net_params.pkl'
                 path_mi = self.model_dir + '/mi_net_params.pkl'
-                self.z_policy.load_state_dict(torch.load(path_z_policy))
-                self.eval_rnn.load_state_dict(torch.load(path_rnn))
-                self.eval_qmix_net.load_state_dict(torch.load(path_qmix))
-                self.mi_net.load_state_dict(torch.load(path_mi))
+                map_location = 'cuda:0' if self.args.cuda else 'cpu'
+                self.z_policy.load_state_dict(torch.load(path_z_policy, map_location=map_location))
+                self.eval_rnn.load_state_dict(torch.load(path_rnn, map_location=map_location))
+                self.eval_qmix_net.load_state_dict(torch.load(path_qmix, map_location=map_location))
+                self.mi_net.load_state_dict(torch.load(path_mi, map_location=map_location))
                 print('Successfully load the model: {}, {}, {} and {}'.format(path_z_policy, path_rnn, path_qmix, path_mi))
             else:
                 raise Exception("No model!")
