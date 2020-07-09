@@ -51,7 +51,7 @@ $ python main.py --map=3m --alg=qmix
 
 Directly run the `main.py`, then the algorithm will start **training** on map `3m`. **Note** CommNet and G2ANet need an external training algorithm, so the name of them are like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written in `./common/arguments.py`.
 
-If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. **Note** we trained these models on GPU, if you don't have CUDA, you need to train the model first.
+If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. 
 
 The running of DyMA-CL is independent from others because it requires different environment settings, so we put it on another project. For more details, please read [DyMA-CL documentation](https://github.com/starry-sky6688/DyMA-CL).
 
