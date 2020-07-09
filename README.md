@@ -49,7 +49,7 @@ We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the dece
 $ python main.py --map=3m --alg=qmix
 ```
 
-Directly run the `main.py`, then the algorithm will start **training** on map `3m`. **Note** CommNet and G2ANet need an external training algorithm, so the name of them are like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written on  `./common/arguments.py`.
+Directly run the `main.py`, then the algorithm will start **training** on map `3m`. **Note** CommNet and G2ANet need an external training algorithm, so the name of them are like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written in `./common/arguments.py`.
 
 If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. **Note** we trained these models on GPU, if you don't have CUDA, you need to train the model first.
 
@@ -69,3 +69,6 @@ Results on other maps are still in training, we will update them later.
 ### 3. Mean Win Rate of 8 Independent Runs on `2s3z --difficulty=7(VeryHard)`
 <div align=center><img width = '600' height ='300' src ="https://github.com/starry-sky6688/StarCraft/blob/master/result/overview_2s3z.png"/></div>
 
+## Replay
+
+If you want to see the replay, make sure the `replay_dir` is an absolute path, which can be set in `./common/arguments.py`. Then the replays of each evaluation will be saved, you can find them in your path.
