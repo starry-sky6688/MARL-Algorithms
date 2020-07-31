@@ -60,7 +60,8 @@ class MAVEN:
         self.target_rnn.load_state_dict(self.eval_rnn.state_dict())
         self.target_qmix_net.load_state_dict(self.eval_qmix_net.state_dict())
 
-        self.eval_parameters = list(self.eval_qmix_net.parameters()) + list(self.eval_rnn.parameters())  + list(self.mi_net.parameters())
+        self.eval_parameters = list(self.z_policy.parameters()) + list(self.eval_qmix_net.parameters()) +\
+                               list(self.eval_rnn.parameters()) + list(self.mi_net.parameters())
         if args.optimizer == "RMS":
             self.optimizer = torch.optim.RMSprop(self.eval_parameters, lr=args.lr)
 
