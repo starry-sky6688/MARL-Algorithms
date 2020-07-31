@@ -72,7 +72,7 @@ class RolloutWorker:
                 last_action[agent_id] = action_onehot
 
             reward, terminated, info = self.env.step(actions)
-            win_tag = True if terminated and info['battle_won'] else False
+            win_tag = True if terminated and 'battle_won' in info and info['battle_won'] else False
             o.append(obs)
             s.append(state)
             u.append(np.reshape(actions, [self.n_agents, 1]))
@@ -197,7 +197,7 @@ class CommRolloutWorker:
                 last_action[agent_id] = action_onehot
 
             reward, terminated, info = self.env.step(actions)
-            win_tag = True if terminated and info['battle_won'] else False
+            win_tag = True if terminated and 'battle_won' in info and info['battle_won'] else False
             o.append(obs)
             s.append(state)
             u.append(np.reshape(actions, [self.n_agents, 1]))
