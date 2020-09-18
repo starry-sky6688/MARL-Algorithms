@@ -119,7 +119,8 @@ class Agents:
         # different episode has different length, so we need to get max length of the batch
         max_episode_len = self._get_max_episode_len(batch)
         for key in batch.keys():
-            batch[key] = batch[key][:, :max_episode_len]
+            if key != 'z':
+                batch[key] = batch[key][:, :max_episode_len]
         self.policy.learn(batch, max_episode_len, train_step, epsilon)
         if train_step > 0 and train_step % self.args.save_cycle == 0:
             self.policy.save_model(train_step)
