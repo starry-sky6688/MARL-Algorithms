@@ -36,9 +36,6 @@ class RolloutWorker:
         epsilon = 0 if evaluate else self.epsilon
         if self.args.epsilon_anneal_scale == 'episode':
             epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
-        if self.args.epsilon_anneal_scale == 'epoch':
-            if episode_num == 0:
-                epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
 
         # sample z for maven
         if self.args.alg == 'maven':
@@ -137,7 +134,7 @@ class RolloutWorker:
         if evaluate and episode_num == self.args.evaluate_epoch - 1 and self.args.replay_dir != '':
             self.env.save_replay()
             self.env.close()
-        return episode, episode_reward, win_tag
+        return episode, episode_reward, win_tag, step
 
 
 # RolloutWorker for communication
@@ -171,9 +168,6 @@ class CommRolloutWorker:
         epsilon = 0 if evaluate else self.epsilon
         if self.args.epsilon_anneal_scale == 'episode':
             epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
-        if self.args.epsilon_anneal_scale == 'epoch':
-            if episode_num == 0:
-                epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         while not terminated and step < self.episode_limit:
             # time.sleep(0.2)
             obs = self.env.get_obs()
@@ -263,4 +257,4 @@ class CommRolloutWorker:
         if evaluate and episode_num == self.args.evaluate_epoch - 1 and self.args.replay_dir != '':
             self.env.save_replay()
             self.env.close()
-        return episode, episode_reward, win_tag
+        return episode, episode_reward, win_tag, step

@@ -1,13 +1,5 @@
 import numpy as np
 import torch
-from policy.vdn import VDN
-from policy.qmix import QMIX
-from policy.coma import COMA
-from policy.reinforce import Reinforce
-from policy.central_v import CentralV
-from policy.qtran_alt import QtranAlt
-from policy.qtran_base import QtranBase
-from policy.maven import MAVEN
 from torch.distributions import Categorical
 
 
@@ -19,25 +11,35 @@ class Agents:
         self.state_shape = args.state_shape
         self.obs_shape = args.obs_shape
         if args.alg == 'vdn':
+            from policy.vdn import VDN
             self.policy = VDN(args)
+        elif args.alg == 'iql':
+            from policy.iql import IQL
+            self.policy = IQL(args)
         elif args.alg == 'qmix':
+            from policy.qmix import QMIX
             self.policy = QMIX(args)
         elif args.alg == 'coma':
+            from policy.coma import COMA
             self.policy = COMA(args)
         elif args.alg == 'qtran_alt':
+            from policy.qtran_alt import QtranAlt
             self.policy = QtranAlt(args)
         elif args.alg == 'qtran_base':
+            from policy.qtran_base import QtranBase
             self.policy = QtranBase(args)
         elif args.alg == 'maven':
+            from policy.maven import MAVEN
             self.policy = MAVEN(args)
         elif args.alg == 'central_v':
+            from policy.central_v import CentralV
             self.policy = CentralV(args)
         elif args.alg == 'reinforce':
+            from policy.reinforce import Reinforce
             self.policy = Reinforce(args)
         else:
             raise Exception("No such algorithm")
         self.args = args
-        print('Init Agents')
 
     def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon, maven_z=None, evaluate=False):
         inputs = obs.copy()
@@ -135,10 +137,13 @@ class CommAgents:
         self.obs_shape = args.obs_shape
         alg = args.alg
         if alg.find('reinforce') > -1:
+            from policy.reinforce import Reinforce
             self.policy = Reinforce(args)
         elif alg.find('coma') > -1:
+            from policy.coma import COMA
             self.policy = COMA(args)
         elif alg.find('central_v') > -1:
+            from policy.central_v import CentralV
             self.policy = CentralV(args)
         else:
             raise Exception("No such algorithm")

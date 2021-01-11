@@ -30,7 +30,7 @@ if __name__ == '__main__':
         args.obs_shape = env_info["obs_shape"]
         args.episode_limit = env_info["episode_limit"]
         runner = Runner(env, args)
-        if args.learn:
+        if not args.evaluate:
             runner.run(i)
         else:
             win_rate, _ = runner.evaluate()
