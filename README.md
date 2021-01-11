@@ -1,6 +1,7 @@
 # StarCraft
 
 Pytorch implementations of the multi-agent reinforcement learning algorithms, including 
+[IQL](https://arxiv.org/abs/1511.08779),
 [QMIX](https://arxiv.org/abs/1803.11485), [VDN](https://arxiv.org/abs/1706.05296), 
 [COMA](https://arxiv.org/abs/1705.08926), [QTRAN](https://arxiv.org/abs/1905.05408)(both **QTRAN-base** and **QTRAN-alt**),
 [MAVEN](https://arxiv.org/abs/1910.07483), [CommNet](https://arxiv.org/abs/1605.07736), 
@@ -10,7 +11,7 @@ we provide **Central-V** and **REINFORCE** for them to training, you can also co
 We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the decentralised micromanagement scenario of [StarCraft II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty).
 
 ## Corresponding Papers
-
+- [IQL: Independent Q-Learning](https://arxiv.org/abs/1511.08779)
 - [QMIX: Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning](https://arxiv.org/abs/1803.11485)
 - [Value-Decomposition Networks For Cooperative Multi-Agent Learning](https://arxiv.org/abs/1706.05296)
 - [Counterfactual Multi-Agent Policy Gradients](https://arxiv.org/abs/1705.08926)
@@ -51,7 +52,7 @@ $ python main.py --map=3m --alg=qmix
 
 Directly run the `main.py`, then the algorithm will start **training** on map `3m`. **Note** CommNet and G2ANet need an external training algorithm, so the name of them are like `reinforce+commnet` or `central_v+g2anet`, all the algorithms we provide are written in `./common/arguments.py`.
 
-If you just want to use this project for demonstration, you should set `--learn=False --load_model=True`. 
+If you just want to use this project for demonstration, you should set `--evaluate=True --load_model=True`. 
 
 The running of DyMA-CL is independent from others because it requires different environment settings, so we put it on another project. For more details, please read [DyMA-CL documentation](https://github.com/starry-sky6688/DyMA-CL).
 
