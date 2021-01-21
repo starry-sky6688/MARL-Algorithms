@@ -114,15 +114,23 @@ class MAVEN:
         # -------------------------------------------------RL Loss------------------------------------------------------
 
         # -------------------------------------------------MI Loss------------------------------------------------------
-        # get length for each episode
-        episode_length = []
-        for episode_idx in range(episode_num):
-            for transition_idx in range(self.args.episode_limit):
-                if terminated[episode_idx, transition_idx, 0] == 1:
-                    episode_length.append(transition_idx + 1)
-                    break
-        episode_len = torch.tensor(episode_length, dtype=torch.long)
-        mi_prob = self.mi_net(q_evals.clone(), avail_u, s, episode_len)  # (episode_num, args.noise_dim)
+        inputs = []
+        for i in range(episode_num):
+            length = int(mask[i].sum().item())
+            q, avail_action = q_evals[i, :length], avail_u[i, :length]
+
+            # only take the valid data
+            q = f.softmax(q, dim=-1)
+            q = q * avail_action
+            q = q / q.sum(dim=-1, keepdim=True)
+            q = torch.cat([q, torch.zeros_like(q_evals[i, length:])], dim=0)
+            q = q.reshape(max_episode_len, -1)
+            inputs.append(q)
+        inputs = torch.stack(inputs, dim=0)
+        inputs = torch.cat([inputs, s], dim=-1)
+        inputs = inputs.permute(1, 0, 2)
+
+        mi_prob = self.mi_net(inputs)  # (episode_num, args.noise_dim)
         class_z = class_z.squeeze(-1)
         mi_loss = f.cross_entropy(mi_prob, class_z)
         # -------------------------------------------------MI Loss------------------------------------------------------

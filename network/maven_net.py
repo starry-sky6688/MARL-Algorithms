@@ -57,35 +57,10 @@ class VarDistribution(nn.Module):
         self.fc_1 = nn.Linear(64, 32)
         self.fc_2 = nn.Linear(32, args.noise_dim)
 
-    def forward(self, q_value, avail_actions, state, episode_length):  # q_value.
-        """
-        :param q_value:   shape = (episode_num, episode_limit, n_agents, n_actions)
-        :param avail_actions:
-        :param state:     shape = (episode_num, episode_limit, state_shape)
-        :param episode_final_idx:     shape = (episode_num)
-        :return:          q(z|sigma(tau))
-        """
-        episode_num = q_value.shape[0]
-        output = []
+    def forward(self, inputs):  # q_value.
         # get sigma(q) by softmax
-        # the length of each episode are different，so we can't do it in one forward
-        for i in range(episode_num):
-            length = episode_length[i]
-            # only take the valid data
-            q,  avail_action, s = q_value[i, :length], avail_actions[i, :length], state[i, :length]
-            q = f.softmax(q, dim=-1)
-            q = q * avail_action
-            q = q / q.sum(dim=-1, keepdim=True)
-
-            q = q.reshape(1, length, -1)
-            s = s.unsqueeze(0)
-            inputs = torch.cat([q, s], dim=-1)
-            inputs = inputs.permute(1, 0, 2)
-
-            _, h = self.GRU(inputs)  # (1, 1, 64)
-            x = f.relu(self.fc_1(h.squeeze(0)))
-            x = self.fc_2(x)
-            x = f.softmax(x, dim=-1)
-            output.append(x)
-        output = torch.cat(output, dim=0)
+        _, h = self.GRU(inputs)  # (1, 1, 64)
+        x = f.relu(self.fc_1(h.squeeze(0)))
+        x = self.fc_2(x)
+        output = f.softmax(x, dim=-1)
         return output
