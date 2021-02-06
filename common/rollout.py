@@ -83,6 +83,8 @@ class RolloutWorker:
             if self.args.epsilon_anneal_scale == 'step':
                 epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         # last obs
+        obs = self.env.get_obs()
+        state = self.env.get_state()
         o.append(obs)
         s.append(state)
         o_next = o[1:]
@@ -207,6 +209,8 @@ class CommRolloutWorker:
             if self.args.epsilon_anneal_scale == 'step':
                 epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
         # last obs
+        obs = self.env.get_obs()
+        state = self.env.get_state()
         o.append(obs)
         s.append(state)
         o_next = o[1:]
