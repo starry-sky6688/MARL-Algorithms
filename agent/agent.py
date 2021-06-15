@@ -114,6 +114,8 @@ class Agents:
                     if transition_idx + 1 >= max_episode_len:
                         max_episode_len = transition_idx + 1
                     break
+        if max_episode_len == 0:  # 防止所有的episode都没有结束，导致terminated中没有1
+            max_episode_len = self.args.episode_limit
         return max_episode_len
 
     def train(self, batch, train_step, epsilon=None):  # coma needs epsilon for training
