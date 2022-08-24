@@ -22,7 +22,7 @@ We trained these algorithms on [SMAC](https://github.com/oxwhirl/smac), the dece
 - [MAVEN: Multi-Agent Variational Exploration](https://arxiv.org/abs/1910.07483)
 
 ## Requirements
-Use comand `pip install -r requirements.txt` to install the requirements:
+Use `pip install -r requirements.txt` to install the following requirements:
 
 - matplotlib
 - torch
