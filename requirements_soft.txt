@@ -1,0 +1,5 @@
+matplotlib==3.5.3
+PySC2==4.0.0
+protobuf==3.19.0
+SMAC @ git+https://github.com/oxwhirl/smac.git
+torch==1.12.1
