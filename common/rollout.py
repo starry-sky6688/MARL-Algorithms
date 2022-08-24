@@ -20,6 +20,7 @@ class RolloutWorker:
         self.min_epsilon = args.min_epsilon
         print('Init RolloutWorker')
 
+    @torch.no_grad()
     def generate_episode(self, episode_num=None, evaluate=False):
         if self.args.replay_dir != '' and evaluate and episode_num == 0:  # prepare for save replay of evaluation
             self.env.close()
@@ -156,6 +157,7 @@ class CommRolloutWorker:
         self.min_epsilon = args.min_epsilon
         print('Init CommRolloutWorker')
 
+    @torch.no_grad()
     def generate_episode(self, episode_num=None, evaluate=False):
         if self.args.replay_dir != '' and evaluate and episode_num == 0:  # prepare for save replay
             self.env.close()
