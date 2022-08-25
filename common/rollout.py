@@ -20,8 +20,41 @@ class RolloutWorker:
         self.min_epsilon = args.min_epsilon
         print('Init RolloutWorker')
 
+    def _agents_choose_action(self, obs, last_action,
+                              epsilon, evaluate, maven_z=None):
+        """
+        returns:
+            actions: actions agent choose
+            actions_onehot: the onehot representation for actions agent choose
+            avail_actions: the available actions for all agents
+        """
+
+        actions, avail_actions = [], []
+
+        for agent_id in range(self.n_agents):
+            avail_action = self.env.get_avail_agent_actions(agent_id)
+
+            # maven_z is None when algorithm is not maven.
+            action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
+                                               avail_action, epsilon, maven_z, evaluate)
+
+            actions.append(np.int(action))
+            avail_actions.append(avail_action)
+
+        # generate one-hot vector of the action
+        actions_onehot = np.eye(self.n_actions)[actions]
+
+        return actions, actions_onehot, avail_actions
+
     @torch.no_grad()
     def generate_episode(self, episode_num=None, evaluate=False):
+        """
+        returns:
+            episode: the replay buffer containing experience of an episode
+            episode_reward: the total reward for the entire episode
+            win_tag: whether the policy won in this episode
+            step: the number of steps in episode (Note that episode might terminate before episode limit! e.g. the AI won)
+        """
         if self.args.replay_dir != '' and evaluate and episode_num == 0:  # prepare for save replay of evaluation
             self.env.close()
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
@@ -31,12 +64,12 @@ class RolloutWorker:
         step = 0
         episode_reward = 0  # cumulative rewards
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
-        self.agents.policy.init_hidden(1)
+        self.agents.policy.init_hidden(episode_num=1)
 
         # epsilon
         epsilon = 0 if evaluate else self.epsilon
-        if self.args.epsilon_anneal_scale == 'episode':
-            epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+        if self.args.epsilon_anneal_scale == 'episode' and epsilon > self.min_epsilon:
+            epsilon -= self.anneal_epsilon
 
         # sample z for maven
         if self.args.alg == 'maven':
@@ -47,27 +80,21 @@ class RolloutWorker:
             z_prob = self.agents.policy.z_policy(state)
             maven_z = one_hot_categorical.OneHotCategorical(z_prob).sample()
             maven_z = list(maven_z.cpu())
+        else:
+            maven_z = None
 
         while not terminated and step < self.episode_limit:
             # time.sleep(0.2)
             obs = self.env.get_obs()
             state = self.env.get_state()
-            actions, avail_actions, actions_onehot = [], [], []
-            for agent_id in range(self.n_agents):
-                avail_action = self.env.get_avail_agent_actions(agent_id)
-                if self.args.alg == 'maven':
-                    action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
-                                                       avail_action, epsilon, maven_z, evaluate)
-                else:
-                    action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
-                                                       avail_action, epsilon, evaluate)
-                # generate onehot vector of th action
-                action_onehot = np.zeros(self.args.n_actions)
-                action_onehot[action] = 1
-                actions.append(np.int(action))
-                actions_onehot.append(action_onehot)
-                avail_actions.append(avail_action)
-                last_action[agent_id] = action_onehot
+
+            # choose action for each agent
+            # Note that maven_z is None if algorithm is not maven.
+
+            actions, actions_onehot, avail_actions = self._agents_choose_action(obs, last_action,
+                                                                                epsilon, evaluate,
+                                                                                maven_z)
+            last_action = np.copy(actions_onehot)
 
             reward, terminated, info = self.env.step(actions)
             win_tag = True if terminated and 'battle_won' in info and info['battle_won'] else False
@@ -81,8 +108,9 @@ class RolloutWorker:
             padded.append([0.])
             episode_reward += reward
             step += 1
-            if self.args.epsilon_anneal_scale == 'step':
-                epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+            if self.args.epsilon_anneal_scale == 'step' and epsilon > self.min_epsilon:
+                epsilon -= self.anneal_epsilon
+
         # last obs
         obs = self.env.get_obs()
         state = self.env.get_state()
@@ -157,8 +185,41 @@ class CommRolloutWorker:
         self.min_epsilon = args.min_epsilon
         print('Init CommRolloutWorker')
 
+    def _agents_choose_action(self, obs, last_action,
+                              epsilon, evaluate, maven_z=None):
+        """
+        returns:
+            actions: actions agent choose
+            actions_onehot: the onehot representation for actions agent choose
+            avail_actions: the available actions for all agents
+        """
+
+        actions, avail_actions = [], []
+
+        for agent_id in range(self.n_agents):
+            avail_action = self.env.get_avail_agent_actions(agent_id)
+
+            # maven_z is None when algorithm is not maven.
+            action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
+                                               avail_action, epsilon, maven_z, evaluate)
+
+            actions.append(np.int(action))
+            avail_actions.append(avail_action)
+
+        # generate one-hot vector of the action
+        actions_onehot = np.eye(self.n_actions)[actions]
+
+        return actions, actions_onehot, avail_actions
+
     @torch.no_grad()
     def generate_episode(self, episode_num=None, evaluate=False):
+        """
+        returns:
+            episode: the replay buffer containing experience of an episode
+            episode_reward: the total reward for the entire episode
+            win_tag: whether the policy won in this episode
+            step: the number of steps in episode (Note that episode might terminate before episode limit! e.g. the AL won)
+        """
         if self.args.replay_dir != '' and evaluate and episode_num == 0:  # prepare for save replay
             self.env.close()
         o, u, r, s, avail_u, u_onehot, terminate, padded = [], [], [], [], [], [], [], []
@@ -168,31 +229,36 @@ class CommRolloutWorker:
         step = 0
         episode_reward = 0
         last_action = np.zeros((self.args.n_agents, self.args.n_actions))
-        self.agents.policy.init_hidden(1)
+        self.agents.policy.init_hidden(episode_num=1)
+
         epsilon = 0 if evaluate else self.epsilon
-        if self.args.epsilon_anneal_scale == 'episode':
-            epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+        if self.args.epsilon_anneal_scale == 'episode' and epsilon > self.min_epsilon:
+            epsilon -= self.anneal_epsilon
+
         while not terminated and step < self.episode_limit:
             # time.sleep(0.2)
             obs = self.env.get_obs()
             state = self.env.get_state()
-            actions, avail_actions, actions_onehot = [], [], []
 
             # get the weights of all actions for all agents
             weights = self.agents.get_action_weights(np.array(obs), last_action)
 
             # choose action for each agent
-            for agent_id in range(self.n_agents):
-                avail_action = self.env.get_avail_agent_actions(agent_id)
-                action = self.agents.choose_action(weights[agent_id], avail_action, epsilon, evaluate)
+            actions, actions_onehot, avail_actions = self._agents_choose_action(
+                                                        obs, last_action, epsilon, evaluate)
+            last_action = np.copy(actions_onehot)
 
-                # generate onehot vector of th action
-                action_onehot = np.zeros(self.args.n_actions)
-                action_onehot[action] = 1
-                actions.append(np.int(action))
-                actions_onehot.append(action_onehot)
-                avail_actions.append(avail_action)
-                last_action[agent_id] = action_onehot
+            # for agent_id in range(self.n_agents):
+            #     avail_action = self.env.get_avail_agent_actions(agent_id)
+            #     action = self.agents.choose_action(weights[agent_id], avail_action, epsilon, evaluate)
+            #
+            #     # generate onehot vector of the action
+            #     action_onehot = np.zeros(self.args.n_actions)
+            #     action_onehot[action] = 1
+            #     actions.append(np.int(action))
+            #     actions_onehot.append(action_onehot)
+            #     avail_actions.append(avail_action)
+            #     last_action[agent_id] = action_onehot
 
             reward, terminated, info = self.env.step(actions)
             win_tag = True if terminated and 'battle_won' in info and info['battle_won'] else False
@@ -208,8 +274,8 @@ class CommRolloutWorker:
             step += 1
             # if terminated:
             #     time.sleep(1)
-            if self.args.epsilon_anneal_scale == 'step':
-                epsilon = epsilon - self.anneal_epsilon if epsilon > self.min_epsilon else epsilon
+            if self.args.epsilon_anneal_scale == 'step' and epsilon > self.min_epsilon:
+                epsilon -= self.anneal_epsilon
         # last obs
         obs = self.env.get_obs()
         state = self.env.get_state()

@@ -3,6 +3,25 @@ import threading
 
 
 class ReplayBuffer:
+    """
+    The buffer is stored in self.buffers.
+
+    Keys:
+        o: observation of all agents
+        u: actions agents chose
+        s: state of environment
+        r: reward
+        o_next: next observation
+        s_next: next state of environment
+        avail_u: actions that were available for all agents
+        avail_u_next: next actions that are available for all agents
+        u_onehot: onehot representation of actions agents chose
+        padded: whether this step is a padded data
+        terminated: whether game terminates in this step
+
+    *Key for maven:
+        z: hidden state
+    """
     def __init__(self, args):
         self.args = args
         self.n_actions = self.args.n_actions
@@ -33,24 +52,26 @@ class ReplayBuffer:
         self.lock = threading.Lock()
 
         # store the episode
-    def store_episode(self, episode_batch):
+    def store_episode(self, episode_batch: dict):
         batch_size = episode_batch['o'].shape[0]  # episode_number
         with self.lock:
             idxs = self._get_storage_idx(inc=batch_size)
+            for key in episode_batch.keys():
+                self.buffers[key][idxs] = episode_batch[key]
             # store the informations
-            self.buffers['o'][idxs] = episode_batch['o']
-            self.buffers['u'][idxs] = episode_batch['u']
-            self.buffers['s'][idxs] = episode_batch['s']
-            self.buffers['r'][idxs] = episode_batch['r']
-            self.buffers['o_next'][idxs] = episode_batch['o_next']
-            self.buffers['s_next'][idxs] = episode_batch['s_next']
-            self.buffers['avail_u'][idxs] = episode_batch['avail_u']
-            self.buffers['avail_u_next'][idxs] = episode_batch['avail_u_next']
-            self.buffers['u_onehot'][idxs] = episode_batch['u_onehot']
-            self.buffers['padded'][idxs] = episode_batch['padded']
-            self.buffers['terminated'][idxs] = episode_batch['terminated']
-            if self.args.alg == 'maven':
-                self.buffers['z'][idxs] = episode_batch['z']
+            # self.buffers['o'][idxs] = episode_batch['o']
+            # self.buffers['u'][idxs] = episode_batch['u']
+            # self.buffers['s'][idxs] = episode_batch['s']
+            # self.buffers['r'][idxs] = episode_batch['r']
+            # self.buffers['o_next'][idxs] = episode_batch['o_next']
+            # self.buffers['s_next'][idxs] = episode_batch['s_next']
+            # self.buffers['avail_u'][idxs] = episode_batch['avail_u']
+            # self.buffers['avail_u_next'][idxs] = episode_batch['avail_u_next']
+            # self.buffers['u_onehot'][idxs] = episode_batch['u_onehot']
+            # self.buffers['padded'][idxs] = episode_batch['padded']
+            # self.buffers['terminated'][idxs] = episode_batch['terminated']
+            # if self.args.alg == 'maven':
+            #     self.buffers['z'][idxs] = episode_batch['z']
 
     def sample(self, batch_size):
         temp_buffer = {}
