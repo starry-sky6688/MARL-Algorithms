@@ -33,12 +33,12 @@ class MAVEN:
 
         self.args = args
         if self.args.cuda:
-            self.z_policy.cuda()
-            self.eval_rnn.cuda()
-            self.target_rnn.cuda()
-            self.eval_qmix_net.cuda()
-            self.target_qmix_net.cuda()
-            self.mi_net.cuda()
+            self.z_policy        = self.z_policy.cuda()
+            self.eval_rnn        = self.eval_rnn.cuda()
+            self.target_rnn      = self.target_rnn.cuda()
+            self.eval_qmix_net   = self.eval_qmix_net.cuda()
+            self.target_qmix_net = self.target_qmix_net.cuda()
+            self.mi_net          = self.mi_net.cuda()
         self.model_dir = args.model_dir + '/' + args.alg + '/' + args.map
         # 如果存在模型则加载模型
         if self.args.load_model:
