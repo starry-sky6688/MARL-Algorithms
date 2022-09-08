@@ -41,7 +41,7 @@ class Agents:
             raise Exception("No such algorithm")
         self.args = args
 
-    def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon, maven_z=None, evaluate=False):
+    def choose_action(self, obs, last_action, agent_num, avail_actions, epsilon, maven_z=None):
         inputs = obs.copy()
         avail_actions_ind = np.nonzero(avail_actions)[0]  # index of actions which can be choose
 
@@ -73,7 +73,7 @@ class Agents:
 
         # choose action from q value
         if self.args.alg == 'coma' or self.args.alg == 'central_v' or self.args.alg == 'reinforce':
-            action = self._choose_action_from_softmax(q_value.cpu(), avail_actions, epsilon, evaluate)
+            action = self._choose_action_from_softmax(q_value.cpu(), avail_actions, epsilon)
         else:
             q_value[avail_actions == 0.0] = - float("inf")
             if np.random.uniform() < epsilon:
@@ -82,7 +82,7 @@ class Agents:
                 action = torch.argmax(q_value)
         return action
 
-    def _choose_action_from_softmax(self, inputs, avail_actions, epsilon, evaluate=False):
+    def _choose_action_from_softmax(self, inputs, avail_actions, epsilon):
         """
         :param inputs: # q_value of all actions
         """
@@ -97,11 +97,8 @@ class Agents:
         不能执行的动作概率为0之后，prob中的概率和不为1，这里不需要进行正则化，因为torch.distributions.Categorical
         会将其进行正则化。要注意在训练的过程中没有用到Categorical，所以训练时取执行的动作对应的概率需要再正则化。
         """
-
-        if epsilon == 0 and evaluate:
-            action = torch.argmax(prob)
-        else:
-            action = Categorical(prob).sample().long()
+        
+        action = Categorical(prob).sample().long()
         return action
 
     def _get_max_episode_len(self, batch):
@@ -153,7 +150,7 @@ class CommAgents:
         print('Init CommAgents')
 
     # 根据weights得到概率，然后再根据epsilon选动作
-    def choose_action(self, weights, avail_actions, epsilon, evaluate=False):
+    def choose_action(self, weights, avail_actions, epsilon):
         weights = weights.unsqueeze(0)
         avail_actions = torch.tensor(avail_actions, dtype=torch.float32).unsqueeze(0)
         action_num = avail_actions.sum(dim=1, keepdim=True).float().repeat(1, avail_actions.shape[-1])  # 可以选择的动作的个数
@@ -168,11 +165,7 @@ class CommAgents:
         会将其进行正则化。要注意在训练的过程中没有用到Categorical，所以训练时取执行的动作对应的概率需要再正则化。
         """
 
-        if epsilon == 0 and evaluate:
-            # 测试时直接选最大的
-            action = torch.argmax(prob)
-        else:
-            action = Categorical(prob).sample().long()
+        action = Categorical(prob).sample().long()
         return action
 
     def get_action_weights(self, obs, last_action):
