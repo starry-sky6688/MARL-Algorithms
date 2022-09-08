@@ -57,10 +57,10 @@ class RolloutWorker:
                 avail_action = self.env.get_avail_agent_actions(agent_id)
                 if self.args.alg == 'maven':
                     action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
-                                                       avail_action, epsilon, maven_z, evaluate)
+                                                       avail_action, epsilon, maven_z)
                 else:
                     action = self.agents.choose_action(obs[agent_id], last_action[agent_id], agent_id,
-                                                       avail_action, epsilon, evaluate)
+                                                       avail_action, epsilon)
                 # generate onehot vector of th action
                 action_onehot = np.zeros(self.args.n_actions)
                 action_onehot[action] = 1
@@ -184,7 +184,7 @@ class CommRolloutWorker:
             # choose action for each agent
             for agent_id in range(self.n_agents):
                 avail_action = self.env.get_avail_agent_actions(agent_id)
-                action = self.agents.choose_action(weights[agent_id], avail_action, epsilon, evaluate)
+                action = self.agents.choose_action(weights[agent_id], avail_action, epsilon)
 
                 # generate onehot vector of th action
                 action_onehot = np.zeros(self.args.n_actions)
